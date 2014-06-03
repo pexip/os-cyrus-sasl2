@@ -1,3 +1,9 @@
+cyrus-sasl2 (2.1.25.dfsg1-3ubuntu0.1pexip2) pexip; urgency=low
+
+  * Version bump for reupload
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 03 Jun 2014 12:38:52 +0100
+
 cyrus-sasl2 (2.1.25.dfsg1-3ubuntu0.1pexip1) pexip; urgency=low
 
   * Prepare Pexip packaging
