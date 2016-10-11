@@ -1,3 +1,11 @@
+cyrus-sasl2 (2.1.25.dfsg1-3ubuntu0.1pexip3) pexip; urgency=low
+
+  * Rebuild against libssl1.0.2
+  * debian/patches/0028-autotools_fixes.patch:
+    Use AC_CONFIG_MACRO_DIRS to fix FTBFS.
+
+ -- John-Mark Bell <jmb@pexip.com>  Wed, 12 Oct 2016 00:05:31 +0100
+
 cyrus-sasl2 (2.1.25.dfsg1-3ubuntu0.1pexip2) pexip; urgency=low
 
   * Version bump for reupload

@@ -4,7 +4,7 @@
  AC_INIT(lib/saslint.h)
  AC_PREREQ([2.54])
  
-+AC_CONFIG_MACRO_DIR([cmulocal] [config])
++AC_CONFIG_MACRO_DIRS([cmulocal] [config])
 +
  dnl use ./config.cache as the default cache file.
  dnl we require a cache file to successfully configure our build.
@@ -27,7 +27,7 @@
  AC_PREREQ([2.54])
  
 -AC_CONFIG_AUX_DIR(config)
-+AC_CONFIG_MACRO_DIR([../cmulocal] [../config])
++AC_CONFIG_MACRO_DIRS([../cmulocal] [../config])
 +AC_CONFIG_AUX_DIR([config])
  AC_CANONICAL_HOST
  
