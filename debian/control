@@ -11,7 +11,7 @@ Build-Conflicts: heimdal-dev
 Vcs-Browser: http://git.debian.org/?p=pkg-cyrus-sasl2/cyrus-sasl2.git
 Vcs-Git: git://git.debian.org/pkg-cyrus-sasl2/cyrus-sasl2/
 Homepage: http://www.cyrusimap.org/
-XS-Pexip-Upstream: http://archive.ubuntu.com/ubuntu/ precise
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ jessie
 
 Package: sasl2-bin
 Section: utils
