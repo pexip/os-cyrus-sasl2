@@ -1,6 +1,8 @@
 cyrus-sasl2 (2.1.26.dfsg1-13+deb8u1pexip1) pexip; urgency=low
 
   * Migrate to Jessie
+  * debian/patches/0041_fix_keytab_option_for_MIT_kerberos.patch:
+    Fix FTBFS resulting from autoreconf
 
  -- John-Mark Bell <jmb@pexip.com>  Tue, 21 Feb 2017 13:14:59 +0000
 
