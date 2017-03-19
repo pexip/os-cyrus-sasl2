@@ -22,9 +22,16 @@ export DH_ALWAYS_EXCLUDE=CVS
 # Enable package hardening through dpkg-buildflags
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
+include /usr/share/dpkg/default.mk
 
-DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed -Wl,-z,defs
 
 # Save Berkeley DB used for building the package
 BDB_VERSION ?= $(shell LC_ALL=C dpkg-query -l 'libdb[45].[0-9]-dev' | grep ^ii | sed -e 's|.*\s\libdb\([45]\.[0-9]\)-dev\s.*|\1|')
@@ -53,9 +60,7 @@ ifeq (,$(findstring no-gssapi,$(DEB_BUILD_OPTIONS)))
 else
 	CONFIGURE_GSSAPI=--disable-gssapi
 	DH_PACKAGE_EXCLUDES += -Nlibsasl2-modules-gssapi-mit \
-		-Nlibsasl2-modules-gssapi-heimdal \
-		-Ncyrus-sasl2-mit-dbg \
-		-Ncyrus-sasl2-heimdal-dbg
+		-Nlibsasl2-modules-gssapi-heimdal
 endif
 
 CONFIGURE_COMMON_OPTIONS= \
@@ -84,7 +89,7 @@ CONFIGURE_COMMON_OPTIONS= \
 	$(CONFIGURE_SQL) \
 	--with-sqlite3=/usr \
 	--with-mysql=/usr \
-	--with-pgsql=/usr/include/postgresql \
+	--with-pgsql=/usr \
 	$(CONFIGURE_LDAPDB) \
 	--disable-macos-framework \
 	--with-pam=/usr \
@@ -98,14 +103,15 @@ CONFIGURE_COMMON_OPTIONS= \
 # Some convenience variables
 export TMPBUILD_MIT := $(CURDIR)/build-mit
 export TMPBUILD_HEIMDAL := $(CURDIR)/build-heimdal
+export MIT_LDFLAGS := $(shell krb5-config.mit --libs gssapi | sed -e 's/ -l.*//')
+export MIT_CPPFLAGS := $(shell krb5-config.mit --cflags gssapi)
 export HEIMDAL_LDFLAGS := $(shell krb5-config.heimdal --libs gssapi | sed -e 's/ -l.*//')
 export HEIMDAL_CPPFLAGS := $(shell krb5-config.heimdal --cflags gssapi)
-export TMPPKG_MIT := $(CURDIR)/debian/tmp-mit
-export TMPPKG_HEIMDAL := $(CURDIR)/debian/tmp-heimdal
 
 AUTOFILES=acinclude.m4 aclocal.m4 config/config.sub config/config.guess \
 		  config/ltmain.sh config/libtool.m4
-BUILD_TMP_SUFFIX=.debian-build.tmp
+
+TMPBUILD=$(CURDIR)/build
 
 ### The Makefile targets begin. ###
 
@@ -132,16 +138,16 @@ override_dh_auto_clean:
 	-rm -f sasl-sample-client.8 sasl-sample-server.8 gen-auth.1
 
 	# Remove build directories
-	rm -rf $(TMPBUILD_MIT) $(TMPBUILD_HEIMDAL) $(TMPPKG_MIT) $(TMPPKG_HEIMDAL)
+	rm -rf $(TMPBUILD_MIT) $(TMPBUILD_HEIMDAL)
 
 override_dh_auto_configure:
-	LDFLAGS="$(LDFLAGS) -L/usr/lib/mit-krb5 -Wl,-z,defs" \
-	CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS) -I/usr/include/mit-krb5" \
-	dh_auto_configure -B$(TMPBUILD_MIT) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=mit
-
-	LDFLAGS="$(LDFLAGS) $(HEIMDAL_LDFLAGS) -Wl,-z,defs" \
+	LDFLAGS="$(LDFLAGS) $(HEIMDAL_LDFLAGS)" \
 	CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS) $(HEIMDAL_CPPFLAGS)" \
 	dh_auto_configure -B$(TMPBUILD_HEIMDAL) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=heimdal
+
+	LDFLAGS="$(LDFLAGS) $(MIT_LDFLAGS)" \
+	CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS) $(MIT_CPPFLAGS)" \
+	dh_auto_configure -B$(TMPBUILD_MIT) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=mit
 
 	# Record the build-time settings for later reference
 	echo 'To build this package, configure was called as follows:' \
@@ -152,8 +158,8 @@ override_dh_auto_configure:
 		>> debian/README.configure-options
 
 override_dh_auto_build:
-	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
 	dh_auto_build -B$(TMPBUILD_HEIMDAL) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
+	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
 
 	# Build sample-{client,server}
 	$(MAKE) -f $(CURDIR)/debian/sample/Makefile -C $(CURDIR)/sample T=$(TMPBUILD_MIT)
@@ -167,36 +173,41 @@ override_dh_auto_build:
 	/usr/bin/pod2man --stderr debian/gen-auth/gen-auth >gen-auth.1
 
 override_dh_auto_install:
-	dh_auto_install -B$(TMPBUILD_MIT) -- DESTDIR=$(TMPPKG_MIT) sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
-	dh_auto_install -B$(TMPBUILD_HEIMDAL) -- DESTDIR=$(TMPPKG_HEIMDAL) sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
+	dh_auto_install -B$(TMPBUILD_HEIMDAL) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
+	dh_auto_install -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
 
+	# Remove static plugins - they are useless
+	rm debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/*.a
+	# Remove libtool la files, they are eeevil
+	rm debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/*.la \
+	   debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/*.la
 
 	# Note the version of Berkeley DB used to build this package
-	mkdir -p $(TMPPKG_MIT)/usr/lib/sasl2
-	echo $(BDB_VERSION) > $(TMPPKG_MIT)/usr/lib/sasl2/berkeley_db.txt
+	mkdir -p debian/tmp/usr/lib/sasl2
+	echo $(BDB_VERSION) > debian/tmp/usr/lib/sasl2/berkeley_db.txt
 
 	# Alter the default location and names of files to fit Debian
 	# policy and better integrate with the Debian system.
-	mv $(TMPPKG_MIT)/usr/sbin/pluginviewer $(TMPPKG_MIT)/usr/sbin/saslpluginviewer
-	mv $(TMPPKG_MIT)/usr/share/man/man8/pluginviewer.8 \
-		$(TMPPKG_MIT)/usr/share/man/man8/saslpluginviewer.8
+	mv debian/tmp/usr/sbin/pluginviewer debian/tmp/usr/sbin/saslpluginviewer
+	mv debian/tmp/usr/share/man/man8/pluginviewer.8 \
+		debian/tmp/usr/share/man/man8/saslpluginviewer.8
 	install -m 644 saslauthd/saslauthd.mdoc \
-		$(TMPPKG_MIT)/usr/share/man/man8/saslauthd.8
+		debian/tmp/usr/share/man/man8/saslauthd.8
 	install -m 644 $(CURDIR)/debian/testsaslauthd.8 \
-		$(TMPPKG_MIT)/usr/share/man/man8/testsaslauthd.8
-	mv $(TMPPKG_MIT)/usr/sbin/dbconverter-2 $(TMPPKG_MIT)/usr/sbin/sasldbconverter2
+		debian/tmp/usr/share/man/man8/testsaslauthd.8
+	mv debian/tmp/usr/sbin/dbconverter-2 debian/tmp/usr/sbin/sasldbconverter2
 
 	# Install sample-{client,server} with Debianized names
 	install -m 755 -D $(CURDIR)/sample/sample-client \
-		$(TMPPKG_MIT)/usr/bin/sasl-sample-client
+		debian/tmp/usr/bin/sasl-sample-client
 	install -m 755 -D $(CURDIR)/sample/sample-server \
-		$(TMPPKG_MIT)/usr/sbin/sasl-sample-server
+		debian/tmp/usr/sbin/sasl-sample-server
 
 	# Alter the rpath of certain binaries and shared libraries.
-	chrpath -d $(TMPPKG_MIT)/usr/sbin/sasldblistusers2 \
-		$(TMPPKG_MIT)/usr/sbin/saslpasswd2
+	chrpath -d debian/tmp/usr/sbin/sasldblistusers2 \
+		debian/tmp/usr/sbin/saslpasswd2
 ifeq (,$(findstring no-sql,$(DEB_BUILD_OPTIONS)))
-	chrpath -d $(TMPPKG_MIT)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libsql.so.*.*.*
+	chrpath -d debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libsql.so.*.*.*
 endif
 
 	# Install the sasl-sample-client and -server man pages.
@@ -204,31 +215,26 @@ endif
 
 	# Install saslfinger
 	install -m 644 -D $(CURDIR)/debian/saslfinger/saslfinger.1 \
-		$(TMPPKG_MIT)/usr/share/man/man1/saslfinger.1
+		debian/tmp/usr/share/man/man1/saslfinger.1
 	install -m 755 -D $(CURDIR)/debian/saslfinger/saslfinger \
-		$(TMPPKG_MIT)/usr/bin/saslfinger
+		debian/tmp/usr/bin/saslfinger
 
 	# Install gen-auth
 	install -m 755 -D $(CURDIR)/debian/gen-auth/gen-auth \
-		$(TMPPKG_MIT)/usr/bin/gen-auth
+		debian/tmp/usr/bin/gen-auth
 
 	# Install logcheck snippet
-	install -m 755 -D $(CURDIR)/debian/libsasl2-modules.logcheck.server \
-		$(TMPPKG_MIT)/etc/logcheck/ignore.d.server/libsasl2-modules
+	install -m 644 -D $(CURDIR)/debian/libsasl2-modules.logcheck.server \
+		debian/tmp/etc/logcheck/ignore.d.server/libsasl2-modules
 
 override_dh_install:
-	dh_install -s --autodest --list-missing --sourcedir=$(TMPPKG_MIT) -psasl2-bin -plibsasl2-2 -plibsasl2-modules -plibsasl2-modules-db -plibsasl2-modules-ldap -plibsasl2-modules-otp -plibsasl2-modules-sql -plibsasl2-modules-gssapi-mit -plibsasl2-dev -Nlibsasl2-modules-gssapi-heimdal $(DH_PACKAGE_EXCLUDES)
-	dh_install -s --autodest --list-missing --sourcedir=$(TMPPKG_HEIMDAL) -plibsasl2-modules-gssapi-heimdal -Nsasl2-bin -Nlibsasl2-2 -Nlibsasl2-modules -Nlibsasl2-modules-db -Nlibsasl2-modules-ldap -Nlibsasl2-modules-otp -Nlibsasl2-modules-sql -Nlibsasl2-modules-gssapi-mit -Nlibsasl2-dev $(DH_PACKAGE_EXCLUDES)
+	dh_install --fail-missing
 
 override_dh_installinit:
 	dh_installinit $(DH_PACKAGE_EXCLUDES) --name=saslauthd start 20 2 3 4 5 . stop 20 0 1 6 .
 
 override_dh_strip:
-	dh_strip -Xlibgssapiv2.so. -psasl2-bin -plibsasl2-2 -plibsasl2-modules -plibsasl2-modules-db -plibsasl2-modules-ldap -plibsasl2-modules-otp -plibsasl2-modules-sql -plibsasl2-modules-gssapi-mit -plibsasl2-dev -Nlibsasl2-modules-gssapi-heimdal $(DH_PACKAGE_EXCLUDES) --dbg-package=cyrus-sasl2-dbg
-ifeq (,$(findstring no-gssapi,$(DEB_BUILD_OPTIONS)))
-	dh_strip -Xlibgs2.so.3 -Xlibscram.so. -plibsasl2-modules-gssapi-mit --dbg-package=cyrus-sasl2-mit-dbg
-	dh_strip -plibsasl2-modules-gssapi-heimdal -Nsasl2-bin -Nlibsasl2-2 -Nlibsasl2-modules -Nlibsasl2-modules-db -Nlibsasl2-modules-ldap -Nlibsasl2-modules-otp -Nlibsasl2-modules-sql -Nlibsasl2-modules-gssapi-mit -Nlibsasl2-dev --dbg-package=cyrus-sasl2-heimdal-dbg
-endif
+	dh_strip -O--dbgsym-migration='cyrus-sasl2-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~), cyrus-sasl2-mit-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~), cyrus-sasl2-heimdal-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~)'
 
 override_dh_makeshlibs:
 	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 $(DH_PACKAGE_EXCLUDES)

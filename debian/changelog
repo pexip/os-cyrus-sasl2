@@ -1,4 +1,67 @@
-cyrus-sasl2 (2.1.26.dfsg1-13+deb8u1) jessie-security; urgency=high
+cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3) unstable; urgency=medium
+
+  [ Holger Levsen ]
+  * NMU to help with #856847.
+
+  [ Andreas Beckmann ]
+  * libsasl2-modules.postinst: Remove executable permissions from
+    /etc/logcheck/ignore.d.server/libsasl2-modules on upgrades from jessie.
+    (Closes: #819893)
+
+ -- Holger Levsen <holger@debian.org>  Sun, 19 Mar 2017 12:30:33 +0000
+
+cyrus-sasl2 (2.1.27~101-g0780600+dfsg-2) unstable; urgency=medium
+
+  * Reinstate Heimdal Kerberos support (Closes: #849706)
+  * Add TLS to http protocol links in d/control
+
+ -- Ondřej Surý <ondrej@debian.org>  Sat, 31 Dec 2016 15:59:34 +0100
+
+cyrus-sasl2 (2.1.27~101-g0780600+dfsg-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.1.27~101-g0780600+dfsg
+  * Rebase patches on top of 2.1.27~101-g0780600+dfsg
+
+ -- Ondřej Surý <ondrej@debian.org>  Fri, 25 Nov 2016 13:35:52 +0100
+
+cyrus-sasl2 (2.1.27~72-g88d82a3+dfsg-1) unstable; urgency=low
+
+  * Imported Upstream version 2.1.27~72-g88d82a3+dfsg
+  * Switch repack.sh to repack.stub
+  * Remove d/autoreconf, not needed anymore
+  * Disable 0006-Link-with-libsasldb.a-instead-of-libsasldb.al.patch to
+    fix FTBFS
+  * Update d/control with heimdal removal
+  * Run wrap-and-sort -a over d/ directory
+  * Update Conflicts/Replaces for new 2.1.27 git snapshot
+  * Rebase patches on top of 2.1.27~72-g88d82a3+dfsg
+  * Update d/rules to remove heimdall and more cleanups
+  * Remove heimdal packages (Closes: #837724)
+  * Change linking from sasldb/.libs/libsasldb.al to sasldb/libsasldb.la
+  * Cleanup LTLIBOBJS for modern autotools
+  * Add ${with_pgsql}include/postgresql/ to include path
+  * Add default Debian hardening to sample server and client
+  * Fix some lintian errors
+  * Update and fix d/copyright after major d/ rewrite
+  * Fix more libsasl2.pc variables
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 25 Oct 2016 17:39:20 +0200
+
+cyrus-sasl2 (2.1.26.dfsg1-16) unstable; urgency=medium
+
+  * Add trailing slash to find command in init script, so people can have
+    /etc/default as symlink (Closes: #791814)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 24 Mar 2016 14:06:38 +0100
+
+cyrus-sasl2 (2.1.26.dfsg1-15) unstable; urgency=medium
+
+  * Add fix for auth_rimap infinite loop (hang) when IMAP server closes
+    connection (Closes: #815208)
+
+ -- Ondřej Surý <ondrej@debian.org>  Thu, 24 Mar 2016 11:54:40 +0100
+
+cyrus-sasl2 (2.1.26.dfsg1-14) unstable; urgency=medium
 
   * [CVE-2013-4122]: Handle NULL returns from glibc 2.17+ crypt()
     (Closes: #784112)

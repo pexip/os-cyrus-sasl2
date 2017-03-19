@@ -2112,7 +2112,7 @@ digestmd5_server_mech_step1(server_context_t *stext,
 	return SASL_FAIL;
     }
 
-    if (text->http_mode &&
+    if (text->http_mode && text->reauth->timeout &&
 	sparams->utils->mutex_lock(text->reauth->mutex) == SASL_OK) { /* LOCK */
 
 	/* Create an initial cache entry for non-persistent HTTP connections */
@@ -2451,7 +2451,7 @@ static int digestmd5_server_mech_step2(server_context_t *stext,
 #endif
     }
 
-    if (!text->nonce) {
+    if (!text->nonce && text->reauth->timeout) {
 	unsigned val = hash((char *) nonce) % text->reauth->size;
 
 	/* reauth attempt or continuation of HTTP Digest on a
@@ -2758,7 +2758,7 @@ static int digestmd5_server_mech_step2(server_context_t *stext,
     /* if ok verified */
     if (strcmp(serverresponse, response) != 0) {
 	if (Try_8859_1) {
-	    
+            sparams->utils->free(serverresponse);
 	    serverresponse = create_response(text,
 					     sparams->utils,
 					     nonce,
@@ -3048,7 +3048,8 @@ static int digestmd5_server_mech_step(void *conn_context,
 	    memset(oparams, 0, sizeof(sasl_out_params_t));
 	    if (text->nonce) sparams->utils->free(text->nonce);
 	    if (text->realm) sparams->utils->free(text->realm);
-	    text->nonce = text->realm = NULL;
+	    text->realm = NULL;
+	    text->nonce = NULL;
 
 	    /* fall through and issue challenge */
 	}
@@ -3650,7 +3651,6 @@ static int parse_server_challenge(client_context_t *ctext,
     int saw_qop = 0;
     int ciphers = 0;
     int maxbuf_count = 0;
-    bool IsUTF8 = FALSE;
     int algorithm_count = 0;
     int opaque_count = 0;
 
@@ -3867,8 +3867,6 @@ SKIP_SPACES_IN_CIPHER:
 		params->utils->seterror(params->utils->conn, 0,
 					"Charset must be UTF-8");
 		goto FreeAllocatedMem;
-	    } else {
-		IsUTF8 = TRUE;
 	    }
 	} else if (strcasecmp(name,"algorithm")==0) {
 	    if (text->http_mode && strcasecmp(value, "md5") == 0) {
@@ -4299,7 +4297,7 @@ digestmd5_client_mech_step1(client_context_t *ctext,
     *clientoutlen = (unsigned) strlen(text->out_buf);
     *clientout = text->out_buf;
 
-    text->state = 3;
+    /* check for next state (2 or 3) is done in digestmd5_client_mech_step() */
     return SASL_CONTINUE;
 }
 
@@ -4332,6 +4330,7 @@ static int digestmd5_client_mech_step2(client_context_t *ctext,
     
 	if (nrealm == 1) {
 	    /* only one choice! */
+	    if (text->realm) params->utils->free(text->realm);
 	    text->realm = realms[0];
 
 	    /* free realms */
@@ -4525,16 +4524,10 @@ static int digestmd5_client_mech_step(void *conn_context,
 		return SASL_CONTINUE;
 	    }
 	}
-	
-	/* fall through and respond to challenge */
-	
-    case 3:
-	if (serverin && !strncasecmp(serverin, "rspauth=", 8)) {
-	    return digestmd5_client_mech_step3(ctext, params,
-					       serverin, serverinlen,
-					       prompt_need,
-					       clientout, clientoutlen,
-					       oparams);
+	else if (!strncasecmp(serverin, "rspauth=", 8)) {
+	    /* server accepted fast reauth */
+	    text->state = 3;
+	    goto step3;
 	}
 
 	/* fall through and respond to challenge */
@@ -4561,6 +4554,14 @@ static int digestmd5_client_mech_step(void *conn_context,
 					   clientout, clientoutlen,
 					   oparams);
 
+    case 3:
+    step3:
+	return digestmd5_client_mech_step3(ctext, params,
+					   serverin, serverinlen,
+					   prompt_need,
+					   clientout, clientoutlen,
+					   oparams);
+
     default:
 	params->utils->log(NULL, SASL_LOG_ERR,
 			   "Invalid DIGEST-MD5 client step %d\n", text->state);
@@ -4581,6 +4582,8 @@ static void digestmd5_client_mech_dispose(void *conn_context,
 	       "DIGEST-MD5 client mech dispose");
 
     if (ctext->free_password) _plug_free_secret(utils, &ctext->password);
+    if (ctext->algorithm) utils->free(ctext->algorithm);
+    if (ctext->opaque) utils->free(ctext->opaque);
 
     digestmd5_common_mech_dispose(conn_context, utils);
 }

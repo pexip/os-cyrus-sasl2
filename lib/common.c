@@ -1045,10 +1045,10 @@ int sasl_getprop(sasl_conn_t *conn, int propnum, const void **pvalue)
       break;
   case SASL_GSS_CREDS:
       if(conn->type == SASL_CONN_CLIENT)
-	  *(void **)pvalue = 
+	  *(const void **)pvalue = 
               ((sasl_client_conn_t *)conn)->cparams->gss_creds;
       else
-	  *(void **)pvalue = 
+	  *(const void **)pvalue = 
               ((sasl_server_conn_t *)conn)->sparams->gss_creds;
       break;
   case SASL_HTTP_REQUEST: {
@@ -1362,6 +1362,7 @@ const char *sasl_errstring(int saslerr,
     case SASL_CONSTRAINT_VIOLAT: return "sasl_setpass can't store a property because "
 			        "of a constraint violation";
     case SASL_BADBINDING: return "channel binding failure";
+    case SASL_CONFIGERR:  return "error when parsing configuration file";
 
     default:   return "undefined error!";
     }
@@ -1525,11 +1526,8 @@ _sasl_getsimple(void *context,
 		size_t *len)
 {
   const char *userid;
-  sasl_conn_t *conn;
 
   if (! context || ! result) return SASL_BADPARAM;
-
-  conn = (sasl_conn_t *)context;
 
   switch(id) {
   case SASL_CB_AUTHNAME:
@@ -2426,6 +2424,11 @@ int _sasl_is_equal_mech(const char *req_mech,
     } else {
         n = req_mech_len;
         *plus = 0;
+    }
+
+    if (n < strlen(plug_mech)) {
+	/* Don't allow arbitrary prefix match */
+	return 0;
     }
 
     return (strncasecmp(req_mech, plug_mech, n) == 0);

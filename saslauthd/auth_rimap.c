@@ -75,6 +75,16 @@
 #include <arpa/inet.h>
 #include <signal.h>
 #include <netdb.h>
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 
 #include "auth_rimap.h"
 #include "utils.h"
@@ -383,7 +393,7 @@ auth_rimap (
         while( select (fds, &perm, NULL, NULL, &timeout ) >0 ) {
            if ( FD_ISSET(s, &perm) ) {
               ret = read(s, rbuf+rc, sizeof(rbuf)-rc);
-              if ( ret<0 ) {
+              if ( ret<=0 ) {
                  rc = ret;
                  break;
               } else {
@@ -496,7 +506,7 @@ auth_rimap (
         while( select (fds, &perm, NULL, NULL, &timeout ) >0 ) {
            if ( FD_ISSET(s, &perm) ) {
               ret = read(s, rbuf+rc, sizeof(rbuf)-rc);
-              if ( ret<0 ) {
+              if ( ret<=0 ) {
                  rc = ret;
                  break;
               } else {
