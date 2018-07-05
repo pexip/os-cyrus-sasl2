@@ -121,10 +121,12 @@
 #ifndef SASL_H
 #define SASL_H 1
 
+#include <stddef.h>  /* For size_t */
+
 /* Keep in sync with win32/common.mak */
 #define SASL_VERSION_MAJOR 2
 #define SASL_VERSION_MINOR 1
-#define SASL_VERSION_STEP 26
+#define SASL_VERSION_STEP 27
 
 /* A convenience macro: same as was defined in the OpenLDAP LDAPDB */
 #define SASL_VERSION_FULL ((SASL_VERSION_MAJOR << 16) |\
@@ -177,6 +179,7 @@
 				       because of some constrains/policy violation */
 
 #define SASL_BADBINDING -32  /* channel binding failure */
+#define SASL_CONFIGERR  -100 /* error when parsing configuration file */
 
 /* max size of a sasl mechanism name */
 #define SASL_MECHNAMEMAX 20
@@ -222,6 +225,8 @@ extern "C" {
 /* the following functions are used to adjust how allocation and mutexes work
  * they must be called before all other SASL functions:
  */
+
+#include <sys/types.h>
 
 /* memory allocation functions which may optionally be replaced:
  */

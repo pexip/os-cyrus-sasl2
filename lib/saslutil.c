@@ -131,7 +131,6 @@ int sasl_encode64(const char *_in,
     const unsigned char *in = (const unsigned char *)_in;
     unsigned char *out = (unsigned char *)_out;
     unsigned char oval;
-    char *blah;
     unsigned olen;
 
     /* check params */
@@ -147,7 +146,6 @@ int sasl_encode64(const char *_in,
     }
 
     /* Do the work... */
-    blah = (char *) out;
     while (inlen >= 3) {
       /* user provided max buffer size; make sure we don't go over it */
         *out++ = basis_64[in[0] >> 2];
@@ -607,7 +605,7 @@ LOWERCASE:
     return (0);
 }
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW64_VERSION_MAJOR)
 /***************************************************************************** 
  * 
  *  MODULE NAME : GETOPT.C 
