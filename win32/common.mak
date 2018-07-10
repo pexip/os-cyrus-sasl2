@@ -2,7 +2,7 @@
 #Keep in sync with include/sasl.h and win32/include/config.h
 SASL_VERSION_MAJOR=2
 SASL_VERSION_MINOR=1
-SASL_VERSION_STEP=26
+SASL_VERSION_STEP=27
 
 !IF "$(STATIC)" == ""
 STATIC=yes
@@ -76,6 +76,20 @@ DB_INCLUDE=c:\work\isode\db\build_win32
 DB_LIBPATH=c:\work\isode\db\build_win32\Release_static
 !IF "$(VERBOSE)" != "0"
 !MESSAGE Defaulting SleepyCat library path to $(DB_LIBPATH).
+!ENDIF
+!ENDIF
+
+!IF "$(LMDB_INCLUDE)" == ""
+LMDB_INCLUDE=c:\work\isode\lmdb\libraries\liblmdb
+!IF "$(VERBOSE)" != "0"
+!MESSAGE Defaulting LMDB include path to $(LMDB_INCLUDE).
+!ENDIF
+!ENDIF
+
+!IF "$(LMDB_LIBPATH)" == ""
+LMDB_LIBPATH=c:\work\isode\lmdb\libraries\liblmdb\Release
+!IF "$(VERBOSE)" != "0"
+!MESSAGE Defaulting LMDB library path to $(LMDB_LIBPATH).
 !ENDIF
 !ENDIF
 
@@ -194,7 +208,7 @@ CODEGEN=/MDd
 !ENDIF 
 !ENDIF 
 
-CPP_PROJ=$(CODEGEN) /W3 /Gm $(EXCEPTHANDLING) /ZI /Od /D "_DEBUG" /D _CRT_SECURE_NO_DEPRECATE=1 $(CPPFLAGS) /FD /GZ /c
+CPP_PROJ=$(CODEGEN) /W3 /Gm $(EXCEPTHANDLING) /ZI /Od /D "_DEBUG" /D _CRT_SECURE_NO_DEPRECATE=1 $(CPPFLAGS) /FD /RTC1 /c
 
 incremental=yes
 

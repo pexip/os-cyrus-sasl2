@@ -19,7 +19,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 # Global variables
 DAEMON=/usr/sbin/saslauthd
-DEFAULT_FILES=`find /etc/default -regex '/etc/default/saslauthd[_a-zA-Z0-9\-]*$' -print | sort`
+DEFAULT_FILES=`find /etc/default/ -regex '/etc/default/saslauthd[_a-zA-Z0-9\-]*$' -print | sort`
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0

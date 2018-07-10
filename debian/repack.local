@@ -1,0 +1,4 @@
+rm dlcompat-20010505/*
+rm dlcompat-20010505
+rm doc/rfc*
+rm doc/draft*

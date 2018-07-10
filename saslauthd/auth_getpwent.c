@@ -42,6 +42,7 @@
 #include <pwd.h>
 #include <errno.h>
 #include <syslog.h>
+#include <stdio.h>
 
 #ifdef HAVE_CRYPT_H
 #include <crypt.h>
@@ -77,6 +78,7 @@ auth_getpwent (
 {
     /* VARIABLES */
     struct passwd *pw;			/* pointer to passwd file entry */
+    char *crpt_passwd;			/* encrypted password */
     int errnum;
     /* END VARIABLES */
   
@@ -105,7 +107,8 @@ auth_getpwent (
 	}
     }
 
-    if (strcmp(pw->pw_passwd, (const char *)crypt(password, pw->pw_passwd))) {
+    crpt_passwd = crypt(password, pw->pw_passwd);
+    if (!crpt_passwd || strcmp(pw->pw_passwd, (const char *)crpt_passwd)) {
 	if (flags & VERBOSE) {
 	    syslog(LOG_DEBUG, "DEBUG: auth_getpwent: %s: invalid password", login);
 	}
