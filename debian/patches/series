@@ -30,3 +30,4 @@
 0030-Change-linking-from-sasldb-.libs-libsasldb.al-to-sas.patch
 0031-Cleanup-for-modern-autotools.patch
 0032-Add-with_pgsql-include-postgresql-to-include-path.patch
+openssl_zalloc.patch
