@@ -11,7 +11,7 @@ database file to /etc/sasldb2.
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/utils/Makefile.am b/utils/Makefile.am
-index cce413b..17f0457 100644
+index 6ffd8b9..2dcafca 100644
 --- a/utils/Makefile.am
 +++ b/utils/Makefile.am
 @@ -45,10 +45,10 @@
@@ -28,10 +28,10 @@ index cce413b..17f0457 100644
  if NO_SASL_DB_MANS
  man_MANS = 
 diff --git a/utils/dbconverter-2.c b/utils/dbconverter-2.c
-index 33e18fb..06c2e9a 100644
+index 4e1bc13..9de1a87 100644
 --- a/utils/dbconverter-2.c
 +++ b/utils/dbconverter-2.c
-@@ -382,7 +382,7 @@ static struct sasl_callback goodsasl_cb[] = {
+@@ -385,7 +385,7 @@ static struct sasl_callback goodsasl_cb[] = {
  
  int main(int argc, char **argv)
  {
@@ -40,7 +40,7 @@ index 33e18fb..06c2e9a 100644
      int result;
  
      if (argc > 1) {
-@@ -418,7 +418,7 @@ int main(int argc, char **argv)
+@@ -421,7 +421,7 @@ int main(int argc, char **argv)
      
      printf("\nThis program will take the sasldb file specified on the\n"
             "command line and convert it to a new sasldb file in the default\n"

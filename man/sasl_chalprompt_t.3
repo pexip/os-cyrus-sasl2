@@ -1,86 +1,120 @@
-.\" -*- nroff -*-
-.\" 
-.\" Copyright (c) 2001 Carnegie Mellon University.  All rights reserved.
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\"
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer. 
-.\"
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
-.\"
-.\" 3. The name "Carnegie Mellon University" must not be used to
-.\"    endorse or promote products derived from this software without
-.\"    prior written permission. For permission or any other legal
-.\"    details, please contact  
-.\"      Office of Technology Transfer
-.\"      Carnegie Mellon University
-.\"      5000 Forbes Avenue
-.\"      Pittsburgh, PA  15213-3890
-.\"      (412) 268-4387, fax: (412) 268-7395
-.\"      tech-transfer@andrew.cmu.edu
-.\"
-.\" 4. Redistributions of any form whatsoever must retain the following
-.\"    acknowledgment:
-.\"    "This product includes software developed by Computing Services
-.\"     at Carnegie Mellon University (http://www.cmu.edu/computing/)."
-.\"
-.\" CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO
-.\" THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-.\" AND FITNESS, IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE
-.\" FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
-.\" AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
-.\" OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-.\" 
-.TH sasl_chalprompt_t 3 "10 July 2001" SASL "SASL man pages"
+.\" Man page generated from reStructuredText.
+.
+.TH "SASL_CHALPROMPT_T" "3" "November 08, 2018" "2.1.27" "Cyrus SASL"
 .SH NAME
-sasl_chalprompt_t \- Realm Acquisition Callback
-
+sasl_chalprompt_t \- Cyrus SASL documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
 .SH SYNOPSIS
-.nf
-.B #include <sasl/sasl.h>
-
 .sp
-.BI "int sasl_chalprompt_t(void " *context ", int " id ", "
-.BI "			   const char " *challenge ","
-.BI "                      const char " *prompt ", const char " *defresult ","
-.BI "                      const char " **result ", unsigned " *len ")"
+.nf
+#include <sasl/prop.h>
 
+int sasl_chalprompt_t(void *context, int id,
+    const char *challenge,
+    const char *prompt, const char *defresult,
+    const char **result, unsigned *len)
 .fi
 .SH DESCRIPTION
-
-.B sasl_chalprompt_t
-is used to prompt for input in response to a server challenge.
-
-.I context
-context from the callback record
-
-.I id
-callback id (either SASL_CB_ECHOPROMPT or SASL_CB_NOECHOPROMPT)
-
-.I challenge
-the server's challenge
-
-.I prompt
-A prompt for the user
-
-.I defresult
-Default result (may be NULL)
-
-.I result
-The user's response (a NUL terminated string)
-
-.I len
-Length of the user's response.
-
-.SH "RETURN VALUE"
-SASL callback functions should return SASL return codes. See sasl.h for a complete list. SASL_OK indicates success.
-
-.SH "SEE ALSO"
-sasl(3), sasl_callbacks(3)
+.INDENT 0.0
+.TP
+.B int sasl_chalprompt_t(void *context,
+.TP
+.B int id,
+.TP
+.B const char *challenge,
+.TP
+.B const char *prompt,
+.TP
+.B const char *defresult,
+.TP
+.B const char **result,
+.TP
+.B unsigned *len)
+\fBsasl_chalprompt_t\fP  is used to prompt for input in response to a server challenge.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBcontext\fP – is the context from the callback record
+.IP \(bu 2
+\fBid\fP – is the callback id (either SASL_CB_ECHOPROMPT or  SASL_CB_NOECHOPROMPT)
+.IP \(bu 2
+\fBchallenge\fP – the server’s challenge
+.IP \(bu 2
+\fBprompt\fP – A prompt for the user
+.IP \(bu 2
+\fBdefresult\fP – Default result (may be NULL)
+.IP \(bu 2
+\fBlen\fP – Length of the user’s response.
+.UNINDENT
+.TP
+.B Result
+The user’s response (a NUL terminated string) or SASL error code.
+.UNINDENT
+.UNINDENT
+.SH RETURN VALUE
+.sp
+The user’s response (NUL terminated), or a SASL error code. See sasl_errors(3)\&.
+.SH SEE ALSO
+.sp
+sasl(3), sasl_errors(3), sasl_callbacks(3)
+.SH AUTHOR
+The Cyrus Team
+.SH COPYRIGHT
+1993-2016, The Cyrus Team
+.\" Generated by docutils manpage writer.
+.

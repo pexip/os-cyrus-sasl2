@@ -11,7 +11,7 @@ LIBDIR=$(T)/lib/.libs
 all: sample-server sample-client
 
 sample-server: sample-server.c
-	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -g -o sample-server sample-server.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2
+	$(CC) $(CFLAGS) $(CPPFLAGS) -DPLUGINDIR=\"/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2\" $(LDFLAGS) -g -o sample-server sample-server.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2
 
 sample-client: sample-client.c
-	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -g -o sample-client sample-client.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2
+	$(CC) $(CFLAGS) $(CPPFLAGS) -DPLUGINDIR=\"/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2\" $(LDFLAGS) -g -o sample-client sample-client.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2

@@ -1,9 +1,74 @@
-cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3+deb9u1) stretch-security; urgency=high
+cyrus-sasl2 (2.1.27+dfsg-1+deb10u1) buster-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
   * Off-by-one in _sasl_add_string function (CVE-2019-19906) (Closes: #947043)
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 19 Dec 2019 23:13:43 +0100
+ -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 19 Dec 2019 22:59:30 +0100
+
+cyrus-sasl2 (2.1.27+dfsg-1) unstable; urgency=medium
+
+  [ Ryan Tandy ]
+  * Fix libsasl2-2 incorrectly depending on GSSAPI libraries.
+    (Closes: #917129)
+  * Restore changes from NMU versions
+    2.1.27~101-g0780600+dfsg-3 and 2.1.27~101-g0780600+dfsg-3.1
+    (Closes: #917140)
+
+  [ Ondřej Surý ]
+  * Upload to unstable.
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 22 Jan 2019 08:53:59 +0000
+
+cyrus-sasl2 (2.1.27+dfsg-1~exp1) experimental; urgency=medium
+
+  [ Roberto C. Sanchez ]
+  * Change email in d/control
+  * Apply uversionmangle option in d/watch for correct upstream version
+    sort
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS (Closes: #792851)
+    + 0033-cross.patch: Drop -ldb from make depends.
+  * Use $(CC) instead of gcc in d/sample/Makefile
+
+  [ Ondřej Surý ]
+  * Add upstream tarball signing key
+  * Update d/watch and d/copyright to use gbp import-orig ability to
+    repack the tarball
+  * New upstream version 2.1.27+dfsg
+  * Bump policy to current version and debhelper compat level to 12
+  * Upstream supports only a single plugindir now, switch to M-A plugindir
+  * Build libsasl2-modules-gssapi-heimdal against heimdal 
+    + Install heimdal build into separate tmp directory and strip rpath
+      from it (Closes: #880393)
+  * Replace extra priority with optional
+  * Add Pre-Depends: ${misc:Pre-Depends} to sasl2-bin for systemd predepends
+  * Add libpod-pom-view-restructured-perl to B-D to regenerate documentation
+  * Add a patch to stop importing docutils_version in sphinx-build manpage helper
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 21 Jan 2019 09:47:50 +0000
+
+cyrus-sasl2 (2.1.27~rc8-1) unstable; urgency=medium
+
+  * New upstream version 2.1.27~rc8
+  * Rebase patches for Cyrus SASL 2.1.27~rc8
+  * Cleanup d/control
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 02 Oct 2018 08:05:10 +0000
+
+cyrus-sasl2 (2.1.27~rc4-1) unstable; urgency=medium
+
+  * New upstream version 2.1.27~rc4
+  * Refresh patches for 2.4.27~rc4 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 19 Sep 2017 09:53:57 +0200
+
+cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload with maintainer permission.
+  * Add support for build-profiles. (Closes: #894297)
+
+ -- Karsten Merker <merker@debian.org>  Sat, 21 Apr 2018 18:20:16 +0200
 
 cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3) unstable; urgency=medium
 
