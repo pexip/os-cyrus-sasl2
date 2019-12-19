@@ -1,3 +1,10 @@
+cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3+deb9u1) stretch-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Off-by-one in _sasl_add_string function (CVE-2019-19906) (Closes: #947043)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 19 Dec 2019 23:13:43 +0100
+
 cyrus-sasl2 (2.1.27~101-g0780600+dfsg-3) unstable; urgency=medium
 
   [ Holger Levsen ]
