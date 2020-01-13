@@ -30,4 +30,5 @@
 0030-Change-linking-from-sasldb-.libs-libsasldb.al-to-sas.patch
 0031-Cleanup-for-modern-autotools.patch
 0032-Add-with_pgsql-include-postgresql-to-include-path.patch
+0033-CVE-2019-19906.patch
 openssl_zalloc.patch
