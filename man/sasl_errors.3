@@ -1,155 +1,232 @@
-.\" -*- nroff -*-
-.\" 
-.\" Copyright (c) 2001 Carnegie Mellon University.  All rights reserved.
-.\"
-.\" Redistribution and use in source and binary forms, with or without
-.\" modification, are permitted provided that the following conditions
-.\" are met:
-.\"
-.\" 1. Redistributions of source code must retain the above copyright
-.\"    notice, this list of conditions and the following disclaimer. 
-.\"
-.\" 2. Redistributions in binary form must reproduce the above copyright
-.\"    notice, this list of conditions and the following disclaimer in
-.\"    the documentation and/or other materials provided with the
-.\"    distribution.
-.\"
-.\" 3. The name "Carnegie Mellon University" must not be used to
-.\"    endorse or promote products derived from this software without
-.\"    prior written permission. For permission or any other legal
-.\"    details, please contact  
-.\"      Office of Technology Transfer
-.\"      Carnegie Mellon University
-.\"      5000 Forbes Avenue
-.\"      Pittsburgh, PA  15213-3890
-.\"      (412) 268-4387, fax: (412) 268-7395
-.\"      tech-transfer@andrew.cmu.edu
-.\"
-.\" 4. Redistributions of any form whatsoever must retain the following
-.\"    acknowledgment:
-.\"    "This product includes software developed by Computing Services
-.\"     at Carnegie Mellon University (http://www.cmu.edu/computing/)."
-.\"
-.\" CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO
-.\" THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-.\" AND FITNESS, IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE
-.\" FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
-.\" AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
-.\" OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-.\" 
-.TH sasl_errors 3 "10 July 2001" SASL "SASL man pages"
+.\" Man page generated from reStructuredText.
+.
+.TH "SASL_ERRORS" "3" "November 08, 2018" "2.1.27" "Cyrus SASL"
 .SH NAME
-sasl_errors \- SASL error codes
-
+sasl_errors \- Cyrus SASL documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
 .SH SYNOPSIS
+.sp
 .nf
-.B #include <sasl/sasl.h>
-
+#include <sasl/sasl.h>
 .fi
 .SH DESCRIPTION
-
-The following are the general error codes that may be returned by
-calls into the SASL library, and their meanings (that may vary
-slightly based on context):
-
-.SH Common Result Codes
-.TP 0.8i
-SASL_OK
+.sp
+The  following  are  the  general  error codes that may be
+returned by calls into the SASL library, and  their  meanings (that may vary slightly based on context).
+.SS Common Result Codes
+.INDENT 0.0
+.TP
+.B SASL_OK
 Success
-.TP 0.8i
-SASL_CONTINUE
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_CONTINUE
 Another step is needed in authentication
-.TP 0.8i
-SASL_FAIL
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_FAIL
 Generic Failure
-.TP 0.8i
-SASL_NOMEM
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOMEM
 Memory shortage failure
-.TP 0.8i
-SASL_BUFOVER
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BUFOVER
 Overflowed buffer
-.TP 0.8i
-SASL_NOMECH
-Mechanism not supported / No mechanisms matched requirements
-.TP 0.8i
-SASL_BADPROT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOMECH
+Mechanism  not  supported  / No mechanisms matched
+requirements
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BADPROT
 Bad / Invalid Protocol or Protocol cancel
-.TP 0.8i
-SASL_NOTDONE
-Can't request information / Not applicable until later in exchange
-.TP 0.8i
-SASL_BADPARAM
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOTDONE
+Cannot request information / Not  applicable  until
+later in exchange
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BADPARAM
 Invalid Parameter Supplied
-.TP 0.8i
-SASL_TRYAGAIN
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_TRYAGAIN
 Transient Failure (e.g. weak key)
-.TP 0.8i
-SASL_BADMAC
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BADMAC
 Integrity Check Failed
-.TP 0.8i
-SASL_NOTINIT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOTINIT
 SASL library not initialized
-
-.SH Client-only Result Codes
-.TP 0.8i
-SASL_INTERACT
+.UNINDENT
+.SS Client\-only Result Codes
+.INDENT 0.0
+.TP
+.B SASL_INTERACT
 Needs user interaction
-.TP 0.8i
-SASL_BADSERV
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BADSERV
 Server failed mutual authentication step
-.TP 0.8i
-SASL_WRONGMECH
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_WRONGMECH
 Mechanism does not support requested feature
-
-.SH Server-only Result Codes
-.TP 0.8i
-SASL_BADAUTH
+.UNINDENT
+.SS Server\-only Result Codes
+.INDENT 0.0
+.TP
+.B SASL_BADAUTH
 Authentication Failure
-.TP 0.8i
-SASL_NOAUTHZ
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOAUTHZ
 Authorization Failure
-.TP 0.8i
-SASL_TOOWEAK
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_TOOWEAK
 Mechanism too weak for this user
-.TP 0.8i
-SASL_ENCRYPT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_ENCRYPT
 Encryption needed to use mechanism
-.TP 0.8i
-SASL_TRANS
-One time use of a plaintext password will enable requested mechanism for user
-.TP 0.8i
-SASL_EXPIRED
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_TRANS
+One  time  use of a plaintext password will enable
+requested mechanism for user
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_EXPIRED
 Passphrase expired, must be reset
-.TP 0.8i
-SASL_DISABLED
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_DISABLED
 Account Disabled
-.TP 0.8i
-SASL_NOUSER
-User Not Found 
-.TP 0.8i
-SASL_BADVERS
-Version mismatch with plug-in
-.TP 0.8i
-SASL_NOVERIFY
-USer exists, but no verifier for user
-
-.SH Password Setting Result Codes
-.TP 0.8i
-SASL_PWLOCK
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOUSER
+User Not Found
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_BADVERS
+Version mismatch with plug\-in
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOVERIFY
+User exists, but no verifier for user
+.UNINDENT
+.SS Password Setting Result Codes
+.INDENT 0.0
+.TP
+.B SASL_PWLOCK
 Passphrase locked
-.TP 0.8i
-SASL_NOCHANGE
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOCHANGE
 Requested change was not needed
-.TP 0.8i
-SASL_WEAKPASS
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_WEAKPASS
 Passphrase is too week for security policy.
-.TP 0.8i
-SASL_NOUSERPASS
+.UNINDENT
+.INDENT 0.0
+.TP
+.B SASL_NOUSERPASS
 User supplied passwords are not permitted
-
-.SH "CONFORMING TO"
-RFC 4422
-
-.SH "SEE ALSO"
+.UNINDENT
+.SH CONFORMING TO
+.sp
+\fI\%RFC 4422\fP
+.SH SEE ALSO
+.sp
 sasl(3)
+.SH AUTHOR
+The Cyrus Team
+.SH COPYRIGHT
+1993-2016, The Cyrus Team
+.\" Generated by docutils manpage writer.
+.
