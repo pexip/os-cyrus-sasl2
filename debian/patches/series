@@ -19,5 +19,3 @@
 0019-Stop-importing-docutils_version-in-sphinx-build-manp.patch
 0020-Restore-LIBS-after-checking-gss_inquire_sec_context_.patch
 0021-CVE-2019-19906.patch
-
-openssl_zalloc.patch

@@ -1,3 +1,11 @@
+cyrus-sasl2 (2.1.27+dfsg-1+deb10u1pexip1) pexip; urgency=medium
+
+  * Migrate to Buster
+  * Remove debian/patches/openssl_zalloc.patch as similar
+    functionality applied upstream.
+
+ -- Vincent Sanders <vince@pexip.com>  Sun, 08 Mar 2020 16:04:55 +0000
+
 cyrus-sasl2 (2.1.27+dfsg-1+deb10u1) buster-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
