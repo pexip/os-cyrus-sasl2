@@ -1,6 +1,9 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Cyrus SASL
 Source: ftp://ftp.cyrusimap.org/cyrus-sasl/
+Files-Excluded: dlcompat-20010505
+		doc/rfc*
+		doc/draft*
 
 Files: *
 Copyright: 1998-2003, Carnegie Mellon University
