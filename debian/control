@@ -22,7 +22,7 @@ Build-Depends: chrpath,
                libpod-pom-view-restructured-perl,
 #               libpq-dev <!pkg.cyrus-sasl2.nosql>,
                libsqlite3-dev,
-               libssl1.0-dev,
+               libssl-dev (>= 3),
                po-debconf,
                python3-sphinx,
                quilt

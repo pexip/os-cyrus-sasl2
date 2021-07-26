@@ -1,3 +1,9 @@
+cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip4) pexip; urgency=medium
+
+  * Build-Depend on libssl-dev 3
+
+ -- John-Mark Bell <jmb@pexip.com>  Mon, 26 Jul 2021 16:12:52 +0100
+
 cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip3) pexip-bullseye; urgency=medium
 
   * Bullseye rebuild for ARM64 inclusion
