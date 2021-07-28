@@ -1,0 +1,401 @@
+diff --git a/plugins/digestmd5.c b/plugins/digestmd5.c
+index f184c16..7d2e180 100644
+--- a/plugins/digestmd5.c
++++ b/plugins/digestmd5.c
+@@ -63,6 +63,7 @@
+ #  include <openssl/des.h>
+ #  include <openssl/opensslv.h>
+ #  if (OPENSSL_VERSION_NUMBER >= 0x0090700f) && \
++      (OPENSSL_VERSION_NUMBER < 0x30000000L) && \
+       !defined(OPENSSL_ENABLE_OLD_DES_SUPPORT)
+ #   define des_cblock DES_cblock
+ #   define des_key_schedule DES_key_schedule
+@@ -72,6 +73,20 @@
+            DES_cbc_encrypt((i),(o),(l),&(k),(iv),(e))
+ #   define des_ede2_cbc_encrypt(i,o,l,k1,k2,iv,e) \
+            DES_ede2_cbc_encrypt((i),(o),(l),&(k1),&(k2),(iv),(e))
++#  elif (OPENSSL_VERSION_NUMBER >= 0x30000000L)
++#    ifndef DES_ENCRYPT
++#      define DES_ENCRYPT 1
++#    endif
++#   include <openssl/evp.h>
++#   include <openssl/provider.h>
++typedef unsigned char des_cblock[8];
++typedef unsigned char des_key_schedule[8];
++#   define des_key_sched(k,ks) \
++           xDES_key_sched((k),&(ks))
++#   define des_cbc_encrypt(i,o,l,k,iv,e) \
++           xDES_cbc_encrypt((i),(o),(l),&(k),(iv),(e))
++#   define des_ede2_cbc_encrypt(i,o,l,k1,k2,iv,e) \
++           xDES_ede2_cbc_encrypt((i),(o),(l),&(k1),&(k2),(iv),(e))
+ #  endif /* OpenSSL 0.9.7+ w/o old DES support */
+ # else /* system DES library */
+ #ifdef HAVE_DES_H
+@@ -861,6 +876,87 @@ struct des_context_s {
+ 
+ typedef struct des_context_s des_context_t;
+ 
++#if defined(WITH_SSL_DES) && OPENSSL_VERSION_NUMBER >= 0x30000000L
++static int xDES_key_sched(des_cblock *key, des_key_schedule *schedule)
++{
++    memcpy(schedule, key, 8);
++    return 0;
++}
++
++static void xDES_cbc_encrypt(const unsigned char *input, unsigned char *output,
++                     long length, des_key_schedule *schedule, des_cblock *ivec,
++                     int enc)
++{
++    OSSL_LIB_CTX *lib_ctx;
++    OSSL_PROVIDER *provider;
++    EVP_CIPHER_CTX *cipher_ctx;
++    EVP_CIPHER *cipher;
++    int outlen;
++
++    lib_ctx = OSSL_LIB_CTX_new();
++    if(lib_ctx == NULL)
++      return;
++    provider = OSSL_PROVIDER_try_load(lib_ctx, "legacy", 0);
++    if (provider == NULL) {
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++    cipher_ctx = EVP_CIPHER_CTX_new();
++    if(cipher_ctx == NULL) {
++      OSSL_PROVIDER_unload(provider);
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++    cipher = EVP_CIPHER_fetch(lib_ctx, "DES-CBC", NULL);
++    if(cipher == NULL) {
++      EVP_CIPHER_CTX_free(cipher_ctx);
++      OSSL_PROVIDER_unload(provider);
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++
++    if (EVP_CipherInit(cipher_ctx, cipher, *schedule, *ivec, enc) &&
++        EVP_CIPHER_CTX_set_padding(cipher_ctx, 0) &&
++        EVP_CipherUpdate(cipher_ctx, output, &outlen, input, length) &&
++        EVP_CipherFinal(cipher_ctx, output+outlen, &outlen)) {
++    }
++
++    EVP_CIPHER_free(cipher);
++    EVP_CIPHER_CTX_free(cipher_ctx);
++    OSSL_PROVIDER_unload(provider);
++    OSSL_LIB_CTX_free(lib_ctx);
++}
++
++static void xDES_ede2_cbc_encrypt(const unsigned char *input, unsigned char *output,
++                          long length, des_key_schedule *ks1,
++                          des_key_schedule *ks2,
++                          des_cblock *ivec, int enc)
++{
++    unsigned char key[24];
++    EVP_CIPHER_CTX *ctx;
++    int outlen = 0;
++
++    ctx = EVP_CIPHER_CTX_new();
++    if (ctx == NULL) {
++        return;
++    }
++
++    memcpy(key, ks1, 8);
++    memcpy(key+8, ks2, 8);
++    memcpy(key+12, ks1, 8);
++
++    if (EVP_CipherInit(ctx, EVP_des_ede3_cbc(), key, *ivec, enc) &&
++        EVP_CIPHER_CTX_set_padding(ctx, 0) &&
++        EVP_CipherUpdate(ctx, output, &outlen, input, length) &&
++        EVP_CipherFinal(ctx, output+outlen, &outlen)) {
++    }
++
++    OPENSSL_cleanse(key, sizeof(key));
++
++    EVP_CIPHER_CTX_free(ctx);
++}
++#endif
++
+ /* slide the first 7 bytes of 'inbuf' into the high seven bits of the
+    first 8 bytes of 'keybuf'. 'keybuf' better be 8 bytes long or longer. */
+ static void slidebits(unsigned char *keybuf, unsigned char *inbuf)
+diff --git a/plugins/ntlm.c b/plugins/ntlm.c
+index aeb3ac3..1bb77c4 100644
+--- a/plugins/ntlm.c
++++ b/plugins/ntlm.c
+@@ -83,6 +83,7 @@
+ #include <openssl/des.h>
+ #include <openssl/opensslv.h>
+ #if (OPENSSL_VERSION_NUMBER >= 0x0090700f) && \
++    (OPENSSL_VERSION_NUMBER < 0x30000000L) && \
+      !defined(OPENSSL_ENABLE_OLD_DES_SUPPORT)
+ # define des_cblock DES_cblock
+ # define des_key_schedule DES_key_schedule
+@@ -94,6 +95,22 @@
+          DES_key_sched((k),&(ks))
+ # define des_ecb_encrypt(i,o,k,e) \
+ 	 DES_ecb_encrypt((i),(o),&(k),(e))
++#elif (OPENSSL_VERSION_NUMBER >= 0x30000000L)
++# include <openssl/provider.h>
++# ifndef DES_ENCRYPT
++#  define DES_ENCRYPT 1
++# endif
++# ifndef MD5_DIGEST_LENGTH
++#  define MD5_DIGEST_LENGTH 16
++# endif
++typedef unsigned char des_cblock[8];
++typedef unsigned char des_key_schedule[8];
++# define des_set_odd_parity(k) \
++	 xDES_set_odd_parity((k))
++# define des_set_key(k,ks) \
++	 xDES_set_key((k),&(ks))
++# define des_ecb_encrypt(i,o,k,e) \
++	 xDES_ecb_encrypt((i),(o),&(k),(e))
+ #endif /* OpenSSL 0.9.7+ w/o old DES support */
+ 
+ /* for legacy libcrypto support */
+@@ -333,6 +350,74 @@ static int unload_buffer(const sasl_utils_t *utils, const u_char *buf,
+     return SASL_OK;
+ }
+ 
++#if (OPENSSL_VERSION_NUMBER >= 0x30000000L)
++static void xDES_set_odd_parity(des_cblock *key)
++{
++    int i;
++
++    for (i = 0; i < 8; i++) {
++        unsigned char val = (*key)[i];
++        val = (val >> 4) ^ (val & 0x0e);
++        val = (val >> 2) ^ (val & 0x03);
++        val = (val >> 1) ^ (val & 0x01);
++
++        if (val & 0x01)
++          (*key)[i] &= 0xfe;
++        else
++          (*key)[i] |= 0x01;
++    }
++}
++
++static void xDES_set_key(des_cblock *key, des_key_schedule *des)
++{
++    memcpy(des, key, sizeof(*key));
++}
++
++static void xDES_ecb_encrypt(des_cblock *input, des_cblock *output,
++                            des_key_schedule *ks, int enc)
++{
++    OSSL_LIB_CTX *lib_ctx;
++    OSSL_PROVIDER *provider;
++    EVP_CIPHER_CTX *cipher_ctx;
++    EVP_CIPHER *cipher;
++    int len;
++
++    lib_ctx = OSSL_LIB_CTX_new();
++    if(lib_ctx == NULL)
++      return;
++    provider = OSSL_PROVIDER_try_load(lib_ctx, "legacy", 0);
++    if (provider == NULL) {
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++    cipher_ctx = EVP_CIPHER_CTX_new();
++    if(cipher_ctx == NULL) {
++      OSSL_PROVIDER_unload(provider);
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++    cipher = EVP_CIPHER_fetch(lib_ctx, "DES-ECB", NULL);
++    if(cipher == NULL) {
++      EVP_CIPHER_CTX_free(cipher_ctx);
++      OSSL_PROVIDER_unload(provider);
++      OSSL_LIB_CTX_free(lib_ctx);
++      return;
++    }
++    if(EVP_CipherInit_ex2(cipher_ctx, cipher, *ks, NULL, enc, NULL) == 0 ||
++       /* Disable padding */
++       EVP_CIPHER_CTX_set_padding(cipher_ctx, 0) != 1 ||
++       EVP_CipherUpdate(cipher_ctx,
++                        *output, &len, *input, sizeof(*input)) == 0 ||
++       EVP_CipherFinal_ex(cipher_ctx, *output + len, &len) == 0) {
++      /* Something went wrong */
++    }
++    EVP_CIPHER_free(cipher);
++    EVP_CIPHER_CTX_free(cipher_ctx);
++    OSSL_PROVIDER_unload(provider);
++    OSSL_LIB_CTX_free(lib_ctx);
++}
++#endif
++
+ /*
+  * NTLM encryption/authentication routines per section 2.10 of
+  * draft-leach-cifs-v1-spec-02
+@@ -395,8 +480,38 @@ static unsigned char *P16_nt(unsigned char *P16, sasl_secret_t *passwd,
+ 	*result = SASL_NOMEM;
+     }
+     else {
++#if (OPENSSL_VERSION_NUMBER >= 0x30000000L)
++       OSSL_LIB_CTX *lib_ctx;
++       OSSL_PROVIDER *provider;
++       EVP_MD_CTX *md_ctx;
++       EVP_MD *md;
++#endif
+ 	to_unicode((unsigned char *) *buf, (const char *) passwd->data, passwd->len);
++#if (OPENSSL_VERSION_NUMBER < 0x30000000L)
+ 	MD4((unsigned char *) *buf, 2 * passwd->len, P16);
++#else
++       lib_ctx = OSSL_LIB_CTX_new();
++       if(lib_ctx != NULL) {
++           provider = OSSL_PROVIDER_try_load(lib_ctx, "legacy", 0);
++           if(provider != NULL) {
++               md_ctx = EVP_MD_CTX_new();
++               if(md_ctx != NULL) {
++                   md = EVP_MD_fetch(lib_ctx, "MD4", NULL);
++                   if(md != NULL) {
++                       if(EVP_DigestInit_ex2(md_ctx, md, NULL) == 0 ||
++                          EVP_DigestUpdate(md_ctx, buf, 2 * passwd->len) == 0 ||
++                          EVP_DigestFinal_ex(md_ctx, P16, NULL) == 0) {
++                           /* Something went wrong */
++                       }
++                       EVP_MD_free(md);
++                   }
++                   EVP_MD_CTX_free(md_ctx);
++               }
++               OSSL_PROVIDER_unload(provider);
++           }
++           OSSL_LIB_CTX_free(lib_ctx);
++       }
++#endif
+ 	*result = SASL_OK;
+     }
+     return P16;
+@@ -422,6 +537,7 @@ static unsigned char *P24(unsigned char *P24, unsigned char *P21,
+     return P24;
+ }
+ 
++#if OPENSSL_VERSION_NUMBER < 0x30000000L
+ static HMAC_CTX *_plug_HMAC_CTX_new(const sasl_utils_t *utils)
+ {
+     utils->log(NULL, SASL_LOG_DEBUG, "_plug_HMAC_CTX_new()");
+@@ -444,6 +560,7 @@ static void _plug_HMAC_CTX_free(HMAC_CTX *ctx, const sasl_utils_t *utils)
+     utils->free(ctx);
+ #endif
+ }
++#endif
+ 
+ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+ 			 const char *authid, const char *target,
+@@ -452,7 +569,13 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+ 			 const sasl_utils_t *utils,
+ 			 char **buf, unsigned *buflen, int *result)
+ {
++#if OPENSSL_VERSION_NUMBER < 0x30000000L
+     HMAC_CTX *ctx = NULL;
++#else
++    EVP_MAC *mac = NULL;
++    EVP_MAC_CTX *mac_ctx = NULL;
++    OSSL_PARAM params[2];
++#endif
+     unsigned char hash[EVP_MAX_MD_SIZE];
+     char *upper;
+     unsigned int len;
+@@ -463,6 +586,7 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+ 	SETERROR(utils, "cannot allocate NTLMv2 hash");
+ 	*result = SASL_NOMEM;
+     }
++#if OPENSSL_VERSION_NUMBER < 0x30000000L
+     else if ((ctx = _plug_HMAC_CTX_new(utils)) == NULL) {
+         SETERROR(utils, "cannot allocate HMAC CTX");
+         *result = SASL_NOMEM;
+@@ -494,6 +618,44 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+     }
+ 
+     if (ctx) _plug_HMAC_CTX_free(ctx, utils);
++#else
++    else if ((mac = EVP_MAC_fetch(NULL, "HMAC", NULL)) == NULL) {
++        SETERROR(utils, "cannot allocate EVP_MAC");
++        *result = SASL_NOMEM;
++    }
++    else if ((mac_ctx = EVP_MAC_CTX_new(mac)) == NULL) {
++        SETERROR(utils, "cannot allocate EVP_MAC_CTX");
++	*result = SASL_NOMEM;
++    }
++    else {
++	/* NTLMv2hash = HMAC-MD5(NTLMhash, unicode(ucase(authid + domain))) */
++	P16_nt(hash, passwd, utils, buf, buflen, result);
++
++	/* Use the tail end of the buffer for ucase() conversion */
++	upper = *buf + len;
++	strcpy(upper, authid);
++	if (target) strcat(upper, target);
++	ucase(upper, len);
++	to_unicode((unsigned char *) *buf, upper, len);
++
++	EVP_Q_mac(NULL, "HMAC", NULL, "MD5", NULL, hash, MD4_DIGEST_LENGTH,
++                  (unsigned char *) *buf, 2 * len, hash, sizeof(hash), (size_t *) &len);
++
++        /* V2 = HMAC-MD5(NTLMv2hash, challenge + blob) + blob */
++	params[0] = OSSL_PARAM_construct_utf8_string("digest", "MD5", 0);
++	params[1] = OSSL_PARAM_construct_end();
++	EVP_MAC_init(mac_ctx, hash, len, params);
++	EVP_MAC_update(mac_ctx, challenge, NTLM_NONCE_LENGTH);
++	EVP_MAC_update(mac_ctx, blob, bloblen);
++	EVP_MAC_final(mac_ctx, V2, (size_t *) &len, NTLM_RESP_LENGTH);
++
++	/* the blob is concatenated outside of this function */
++
++	*result = SASL_OK;
++    }
++    if (mac_ctx) EVP_MAC_CTX_free(mac_ctx);
++    if (mac) EVP_MAC_free(mac);
++#endif
+ 
+     return V2;
+ }
+diff --git a/plugins/otp.c b/plugins/otp.c
+index aeb3ac3..1bb77c4 100644
+--- a/plugins/otp.c
++++ b/plugins/otp.c
+@@ -1487,8 +1487,10 @@ int otp_server_plug_init(const sasl_utils_t *utils,
+     *pluglist = otp_server_plugins;
+     *plugcount = 1;  
+     
++#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+     /* Add all digests */
+     OpenSSL_add_all_digests();
++#endif
+     
+     return SASL_OK;
+ }
+@@ -1888,8 +1890,10 @@ int otp_client_plug_init(sasl_utils_t *utils,
+     *pluglist = otp_client_plugins;
+     *plugcount = 1;
+     
++#if (OPENSSL_VERSION_NUMBER < 0x10100000L)
+     /* Add all digests */
+     OpenSSL_add_all_digests();
++#endif
+     
+     return SASL_OK;
+ }
+diff --git a/saslauthd/lak.c b/saslauthd/lak.c
+index 8eea8e3..05c45bc 100644
+--- a/saslauthd/lak.c
++++ b/saslauthd/lak.c
+@@ -735,7 +735,7 @@ int lak_init(
+ 		return rc;
+ 	}
+ 
+-#ifdef HAVE_OPENSSL
++#if defined(HAVE_OPENSSL) && (OPENSSL_VERSION_NUMBER < 0x10100000L)
+ 	OpenSSL_add_all_digests();
+ #endif
+ 
+@@ -756,7 +756,7 @@ void lak_close(
+ 
+ 	free(lak);
+ 
+-#ifdef HAVE_OPENSSL
++#if defined(HAVE_OPENSSL) && (OPENSSL_VERSION_NUMBER < 0x10100000L)
+ 	EVP_cleanup();
+ #endif
+ 
