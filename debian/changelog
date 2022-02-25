@@ -1,3 +1,11 @@
+cyrus-sasl2 (2.1.27+dfsg-1+deb10u2) buster-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Fix _sasl_add_string
+  * Escape password for SQL insert/update commands (CVE-2022-24407)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 25 Feb 2022 09:39:20 +0100
+
 cyrus-sasl2 (2.1.27+dfsg-1+deb10u1) buster-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
