@@ -1,0 +1,74 @@
+From: Andreas Hasenack <andreas@canonical.com>
+Date: Sun, 7 Feb 2021 10:32:30 +0100
+Subject: Fix sphinx error
+
+---
+ docsrc/exts/sphinxlocal/builders/manpage.py | 1 -
+ docsrc/exts/sphinxlocal/roles/saslman.py    | 1 -
+ docsrc/exts/sphinxlocal/writers/manpage.py  | 9 +++------
+ 3 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/docsrc/exts/sphinxlocal/builders/manpage.py b/docsrc/exts/sphinxlocal/builders/manpage.py
+index a6281f7..126839e 100644
+--- a/docsrc/exts/sphinxlocal/builders/manpage.py
++++ b/docsrc/exts/sphinxlocal/builders/manpage.py
+@@ -21,7 +21,6 @@ from docutils.frontend import OptionParser
+ from sphinx import addnodes
+ from sphinx.errors import SphinxError
+ from sphinx.builders import Builder
+-from sphinx.environment import NoUri
+ from sphinx.util.nodes import inline_all_toctrees
+ from sphinx.util.console import bold, darkgreen
+ from sphinx.writers.manpage import ManualPageWriter
+diff --git a/docsrc/exts/sphinxlocal/roles/saslman.py b/docsrc/exts/sphinxlocal/roles/saslman.py
+index f881d98..bcafeec 100644
+--- a/docsrc/exts/sphinxlocal/roles/saslman.py
++++ b/docsrc/exts/sphinxlocal/roles/saslman.py
+@@ -18,7 +18,6 @@ from string import Template
+ import re
+ 
+ def setup(app):
+-    app.info('Initializing saslman plugin')
+     app.add_crossref_type('saslman', 'saslman', '%s', nodes.generated)
+     return
+ 
+diff --git a/docsrc/exts/sphinxlocal/writers/manpage.py b/docsrc/exts/sphinxlocal/writers/manpage.py
+index 13864e0..e8e9c3a 100644
+--- a/docsrc/exts/sphinxlocal/writers/manpage.py
++++ b/docsrc/exts/sphinxlocal/writers/manpage.py
+@@ -13,8 +13,9 @@
+ """
+ 
+ from docutils import nodes
++from time import strftime
++
+ from sphinx.writers.manpage import (
+-    MACRO_DEF,
+     ManualPageWriter,
+     ManualPageTranslator as BaseTranslator
+ )
+@@ -22,7 +23,6 @@ from sphinx.writers.manpage import (
+ 
+ from sphinx import addnodes
+ from sphinx.locale import admonitionlabels, _
+-from sphinx.util.osutil import ustrftime
+ 
+ class CyrusManualPageWriter(ManualPageWriter):
+ 
+@@ -67,15 +67,12 @@ class CyrusManualPageTranslator(BaseTranslator):
+         if builder.config.today:
+             self._docinfo['date'] = builder.config.today
+         else:
+-            self._docinfo['date'] = ustrftime(builder.config.today_fmt
++            self._docinfo['date'] = strftime(builder.config.today_fmt
+                                               or _('%B %d, %Y'))
+         self._docinfo['copyright'] = builder.config.copyright
+         self._docinfo['version'] = builder.config.version
+         self._docinfo['manual_group'] = builder.config.project
+ 
+-        # since self.append_header() is never called, need to do this here
+-        self.body.append(MACRO_DEF)
+-
+         # overwritten -- don't wrap literal_block with font calls
+         self.defs['literal_block'] = ('.sp\n.nf\n', '\n.fi\n')
+ 

@@ -18,6 +18,8 @@
 0033-cross.patch
 0019-Stop-importing-docutils_version-in-sphinx-build-manp.patch
 0020-Restore-LIBS-after-checking-gss_inquire_sec_context_.patch
-0021-CVE-2019-19906.patch
-0022-Fix-_sasl_add_string.patch
-0023-CVE-2022-24407-Escape-password-for-SQL-insert-update.patch
+0034-CVE-2019-19906.patch
+0035-Fix-_sasl_add_string.patch
+0022-Fix-sphinx-error.patch
+0023-Fix-more-sphinx-errors.patch
+0036-CVE-2022-24407-Escape-password-for-SQL-insert-update.patch
