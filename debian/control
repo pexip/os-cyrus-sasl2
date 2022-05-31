@@ -30,7 +30,7 @@ Build-Conflicts: heimdal-dev
 Vcs-Browser: https://salsa.debian.org/debian/cyrus-sasl2
 Vcs-Git: https://salsa.debian.org/debian/cyrus-sasl2.git
 Homepage: https://www.cyrusimap.org/sasl/
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ buster
+XS-Pexip-Upstream: http://deb.debian.org/debian/ bullseye
 
 Package: sasl2-bin
 Section: utils
