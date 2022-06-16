@@ -46,6 +46,10 @@ else
 	DH_PACKAGE_EXCLUDES += -Nlibsasl2-modules-sql
 endif
 
+# We do not want SQL support
+CONFIGURE_SQL=--disable-sql
+DH_PACKAGE_EXCLUDES += -Nlibsasl2-modules-sql
+
 # LDAP support may be turned off during the build, but is on by default.
 ifeq (,$(findstring no-ldap,$(DEB_BUILD_OPTIONS))$(findstring pkg.cyrus-sasl2.noldap,$(DEB_BUILD_PROFILES)))
 	CONFIGURE_LDAP=--with-ldap
@@ -90,8 +94,8 @@ CONFIGURE_COMMON_OPTIONS= \
 	--disable-passdss \
 	$(CONFIGURE_SQL) \
 	--with-sqlite3=/usr \
-	--with-mysql=/usr \
-	--with-pgsql=/usr \
+	--without-mysql \
+	--without-pgsql \
 	$(CONFIGURE_LDAPDB) \
 	--disable-macos-framework \
 	--with-pam=/usr \
