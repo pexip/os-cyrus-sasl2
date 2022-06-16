@@ -216,9 +216,10 @@ override_dh_auto_install:
 ifeq (,$(findstring no-gssapi,$(DEB_BUILD_OPTIONS))$(findstring pkg.cyrus-sasl2.nogssapi,$(DEB_BUILD_PROFILES)))
 	chrpath -d $(TMP_HEIMDAL)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libgssapiv2.so.*.*.*
 endif
-ifeq (,$(findstring no-sql,$(DEB_BUILD_OPTIONS))$(findstring pkg.cyrus-sasl2.nosql,$(DEB_BUILD_PROFILES)))
-	chrpath -d $(TMP_MIT)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libsql.so.*.*.*
-endif
+
+#ifeq (,$(findstring no-sql,$(DEB_BUILD_OPTIONS))$(findstring pkg.cyrus-sasl2.nosql,$(DEB_BUILD_PROFILES)))
+#	chrpath -d $(TMP_MIT)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libsql.so.*.*.*
+#endif
 
 	# Install the sasl-sample-client and -server man pages.
 	dh_installman -psasl2-bin sasl-sample-client.8 sasl-sample-server.8
