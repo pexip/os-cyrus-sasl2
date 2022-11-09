@@ -1,0 +1,67 @@
+diff --git a/plugins/ntlm.c b/plugins/ntlm.c
+index aeb3ac3..4a2816b 100644
+--- a/plugins/ntlm.c
++++ b/plugins/ntlm.c
+@@ -78,7 +78,6 @@
+ #endif
+ 
+ #include <openssl/md4.h>
+-#include <openssl/md5.h>
+ #include <openssl/hmac.h>
+ #include <openssl/des.h>
+ #include <openssl/opensslv.h>
+@@ -100,7 +99,6 @@
+ #include "crypto-compat.h"
+ 
+ #include <sasl.h>
+-#define MD5_H  /* suppress internal MD5 */
+ #include <saslplug.h>
+ 
+ #include "plugin_common.h"
+diff --git a/plugins/otp.c b/plugins/otp.c
+index 3adbff0..9bf45f6 100644
+--- a/plugins/otp.c
++++ b/plugins/otp.c
+@@ -54,10 +54,8 @@
+ #include <assert.h>
+ 
+ #include <openssl/evp.h>
+-#include <openssl/md5.h> /* XXX hack for OpenBSD/OpenSSL cruftiness */
+ 
+ #include <sasl.h>
+-#define MD5_H  /* suppress internal MD5 */
+ #include <saslplug.h>
+ 
+ #include "plugin_common.h"
+diff --git a/plugins/passdss.c b/plugins/passdss.c
+index 2f81d44..c3c0b36 100644
+--- a/plugins/passdss.c
++++ b/plugins/passdss.c
+@@ -67,7 +67,6 @@
+ /* for digest and cipher support */
+ #include <openssl/evp.h>
+ #include <openssl/hmac.h>
+-#include <openssl/md5.h>
+ #include <openssl/sha.h>
+ #include <openssl/dsa.h>
+ 
+@@ -75,7 +74,6 @@
+ #include "crypto-compat.h"
+ 
+ #include <sasl.h>
+-#define MD5_H  /* suppress internal MD5 */
+ #include <saslplug.h>
+ 
+ #include "plugin_common.h"
+diff --git a/plugins/srp.c b/plugins/srp.c
+index 7cf36c2..2a7146f 100644
+--- a/plugins/srp.c
++++ b/plugins/srp.c
+@@ -93,7 +93,6 @@ typedef unsigned short uint32;
+ #include "crypto-compat.h"
+ 
+ #include <sasl.h>
+-#define MD5_H  /* suppress internal MD5 */
+ #include <saslplug.h>
+ 
+ #include "plugin_common.h"

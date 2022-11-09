@@ -24,3 +24,4 @@
 0023-Fix-more-sphinx-errors.patch
 0036-CVE-2022-24407-Escape-password-for-SQL-insert-update.patch
 openssl3-support.patch
+openssl3-internal-md5.patch
