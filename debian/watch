@@ -5,5 +5,6 @@ repack,\
 compression=xz,\
 repacksuffix=+dfsg,\
 dversionmangle=s/\+dfsg\d*$//,uversionmangle=s/-?(rc\d+)/~$1/,\
-pgpsigurlmangle=s/$/.sig/ \
-  https://www.cyrusimap.org/releases/cyrus-sasl-([^\s]+)\.tar\.gz
+pgpsigurlmangle=s/$/.sig/,\
+searchmode=plain \
+  https://api.github.com/repos/cyrusimap/cyrus-sasl/releases https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-[\d\.]+/cyrus-sasl-([\d\.]+)\.tar\.gz

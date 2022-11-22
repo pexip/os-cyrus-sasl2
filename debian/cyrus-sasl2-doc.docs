@@ -1,2 +1,3 @@
-doc/html/*.html
+build-mit/doc/html/*.html
+build-mit/doc/html/sasl/
 saslauthd/LDAP_SASLAUTHD

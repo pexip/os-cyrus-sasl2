@@ -1,0 +1,76 @@
+Origin: upstream, https://github.com/cyrusimap/cyrus-sasl/commit/cb549ef71c5bb646fe583697ebdcaba93267a237
+Bug: https://github.com/cyrusimap/cyrus-sasl/issues/386
+From: Howard Chu <hyc@symas.com>
+Date: Thu, 14 Apr 2022 16:27:54 +0100
+Subject: Fix #386 - honor log_level option on clients too
+
+Signed-off-by: Howard Chu <hyc@symas.com>
+---
+ include/saslplug.h | 2 +-
+ lib/client.c       | 5 ++++-
+ lib/common.c       | 7 ++++++-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/saslplug.h b/include/saslplug.h
+index ab79e68c..988010f6 100755
+--- a/include/saslplug.h
++++ b/include/saslplug.h
+@@ -305,7 +305,7 @@ typedef struct sasl_client_params {
+     int (*spare_fptr1)(void);
+ 
+     unsigned int cbindingdisp;
+-    int spare_int2;
++    int log_level;
+     int spare_int3;
+ 
+     /* flags field as passed to sasl_client_new */
+diff --git a/lib/client.c b/lib/client.c
+index 3784bb0e..443f8cde 100644
+--- a/lib/client.c
++++ b/lib/client.c
+@@ -403,7 +403,7 @@ int sasl_client_new(const char *service,
+   sasl_utils_t *utils;
+   sasl_getopt_t *getopt;
+   void *context;
+-  const char *mlist = NULL;
++  const char *mlist = NULL, *log_level;
+   int plus = 0;
+ 
+   if (_sasl_client_active == 0) return SASL_NOTINIT;
+@@ -445,9 +445,12 @@ int sasl_client_new(const char *service,
+   utils->conn= *pconn;
+   conn->cparams->utils = utils;
+ 
++  log_level = NULL;
+   if(_sasl_getcallback(*pconn, SASL_CB_GETOPT, (sasl_callback_ft *)&getopt, &context) == SASL_OK) {
++    getopt(context, NULL, "log_level", &log_level, NULL);
+     getopt(context, NULL, "client_mech_list", &mlist, NULL);
+   }
++  conn->cparams->log_level = log_level ? atoi(log_level) : SASL_LOG_ERR;
+ 
+   /* if we have a client_mech_list, create ordered list of
+      available mechanisms for this conn */
+diff --git a/lib/common.c b/lib/common.c
+index d9104c89..fd8fcc3c 100644
+--- a/lib/common.c
++++ b/lib/common.c
+@@ -1480,13 +1480,18 @@ static int _sasl_syslog(void *context,
+ 			const char *message)
+ {
+     int syslog_priority;
+-    sasl_server_conn_t *sconn;
+ 
+     if (context) {
+ 	if (((sasl_conn_t *)context)->type == SASL_CONN_SERVER) {
++	    sasl_server_conn_t *sconn;
+ 	    sconn = (sasl_server_conn_t *)context;
+ 	    if (sconn->sparams->log_level < priority) 
+ 		return SASL_OK;
++	} else {
++	    sasl_client_conn_t *conn;
++	    conn = (sasl_client_conn_t *)context;
++	    if (conn->cparams->log_level < priority)
++		return SASL_OK;
+ 	}
+     }
+ 

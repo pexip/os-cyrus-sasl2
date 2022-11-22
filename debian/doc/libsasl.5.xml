@@ -108,7 +108,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term>Comments, Emtpy lines and whitespace-only lines</term>
+        <term>Comments, Empty lines and whitespace-only lines</term>
 
         <listitem>
           <para>Empty lines and whitespace-only lines are ignored, as are
@@ -123,7 +123,7 @@
     <title>Options</title>
 
     <para>There are generic options and options specific to the password
-    verification service or auxiliary property plugin choosen by the
+    verification service or auxiliary property plugin chosen by the
     administrator. Such specific options are documented in manuals listed in
     <xref linkend="seealso" />.</para>
 
@@ -371,7 +371,7 @@
               <term><option>alwaystrue</option></term>
 
               <listitem>
-                <para>TODO</para>
+                <para>Lets the pwcheck succeed always.</para>
               </listitem>
             </varlistentry>
 
@@ -471,12 +471,6 @@
 
         <manvolnum>5</manvolnum>
       </citerefentry></para>
-  </refsection>
-
-  <refsection>
-    <title>Readme files</title>
-
-    <para><filename>README.Debian</filename></para>
   </refsection>
 
   <refsection>

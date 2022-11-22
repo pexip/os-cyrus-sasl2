@@ -27,7 +27,7 @@ msgstr "Ta bort /etc/sasldb2?"
 msgid ""
 "Cyrus SASL can store usernames and passwords in the /etc/sasldb2 database "
 "file."
-msgstr "Cyrus SASL kan lagra användarnamn och lösenord i databasfilen /etc/sasldb2."
+msgstr "Cyrus SASL kan lagra anvÃ¤ndarnamn och lÃ¶senord i databasfilen /etc/sasldb2."
 
 #. Type: boolean
 #. Description
@@ -35,13 +35,13 @@ msgstr "Cyrus SASL kan lagra användarnamn och lösenord i databasfilen /etc/sasld
 msgid ""
 "If important data is stored in that file, you should back it up now or "
 "choose not to remove the file."
-msgstr "Om viktig data lagras i denna fil bör du säkerhetskopiera den nu eller välja att inte ta bort filen."
+msgstr "Om viktig data lagras i denna fil bÃ¶r du sÃ¤kerhetskopiera den nu eller vÃ¤lja att inte ta bort filen."
 
 #. Type: string
 #. Description
 #: ../sasl2-bin.templates:3001
 msgid "Backup file name for /etc/sasldb2:"
-msgstr "Filnamn för säkerhetskopia av /etc/sasldb2:"
+msgstr "Filnamn fÃ¶r sÃ¤kerhetskopia av /etc/sasldb2:"
 
 #. Type: string
 #. Description
@@ -49,7 +49,7 @@ msgstr "Filnamn för säkerhetskopia av /etc/sasldb2:"
 msgid ""
 "Cyrus SASL has stored usernames and passwords in the /etc/sasldb2 database "
 "file."
-msgstr "Cyrus SASL har lagrat användarnamn och lösenord i databasfilen /etc/sasldb2."
+msgstr "Cyrus SASL har lagrat anvÃ¤ndarnamn och lÃ¶senord i databasfilen /etc/sasldb2."
 
 #. Type: string
 #. Description
@@ -58,7 +58,7 @@ msgid ""
 "That file has to be upgraded to a newer database format. First, a backup of "
 "the current file will be created. You can use that if you need to manually "
 "downgrade Cyrus SASL. However, automatic downgrades are not supported."
-msgstr "Denna fil måste uppgraderas till ett nyare databasformat. Först kommer en säkerhetskopia av den nuvarande filen att skapas. Du kan använda den om du behöver nedgradera Cyrus SASL manuellt. Automatiska nedgraderingar stöds dock inte."
+msgstr "Denna fil mÃ¥ste uppgraderas till ett nyare databasformat. FÃ¶rst kommer en sÃ¤kerhetskopia av den nuvarande filen att skapas. Du kan anvÃ¤nda den om du behÃ¶ver nedgradera Cyrus SASL manuellt. Automatiska nedgraderingar stÃ¶ds dock inte."
 
 #. Type: string
 #. Description
@@ -68,13 +68,13 @@ msgid ""
 "space in that location. If the backup file already exists, it will be "
 "overwritten. Leaving this field empty will select the default value (/var/"
 "backups/sasldb2.bak)."
-msgstr "Ange filnamnet för säkerhetskopian. Du bör kontrollera tillgängligt diskutrymme där. Om säkerhetskopian redan existerar kommer den att skrivas över. Standardvärdet (/var/backups/sasldb2.bak) används om fältet lämnas tomt."
+msgstr "Ange filnamnet fÃ¶r sÃ¤kerhetskopian. Du bÃ¶r kontrollera tillgÃ¤ngligt diskutrymme dÃ¤r. Om sÃ¤kerhetskopian redan existerar kommer den att skrivas Ã¶ver. StandardvÃ¤rdet (/var/backups/sasldb2.bak) anvÃ¤nds om fÃ¤ltet lÃ¤mnas tomt."
 
 #. Type: error
 #. Description
 #: ../sasl2-bin.templates:4001
 msgid "Failed to back up /etc/sasldb2"
-msgstr "Misslyckades med att säkerhetskopiera /etc/sasldb2"
+msgstr "Misslyckades med att sÃ¤kerhetskopiera /etc/sasldb2"
 
 #. Type: error
 #. Description
@@ -82,7 +82,7 @@ msgstr "Misslyckades med att säkerhetskopiera /etc/sasldb2"
 msgid ""
 "The /etc/sasldb2 file could not be backed up with the file name you "
 "specified."
-msgstr "Filen /etc/sasldb2 kunde inte säkerhetskopieras med det namn du angav."
+msgstr "Filen /etc/sasldb2 kunde inte sÃ¤kerhetskopieras med det namn du angav."
 
 #. Type: error
 #. Description
@@ -90,7 +90,7 @@ msgstr "Filen /etc/sasldb2 kunde inte säkerhetskopieras med det namn du angav."
 #. Description
 #: ../sasl2-bin.templates:4001 ../sasl2-bin.templates:5001
 msgid "This is a fatal error and will cause the package installation to fail."
-msgstr "Detta är ett kritiskt fel som leder till att paketinstallationen misslyckas."
+msgstr "Detta Ã¤r ett kritiskt fel som leder till att paketinstallationen misslyckas."
 
 #. Type: error
 #. Description
@@ -98,7 +98,7 @@ msgstr "Detta är ett kritiskt fel som leder till att paketinstallationen misslyc
 msgid ""
 "Please eliminate all possible reasons that might lead to this failure, and "
 "try to configure this package again."
-msgstr "Eliminera alla möjliga orsaker som kan leda till detta misslyckande och försök konfigurera detta paket igen."
+msgstr "Eliminera alla mÃ¶jliga orsaker som kan leda till detta misslyckande och fÃ¶rsÃ¶k konfigurera detta paket igen."
 
 #. Type: error
 #. Description
@@ -118,7 +118,7 @@ msgstr "Filen /etc/sasldb2 kunde inte uppgraderas till det nya databasformatet."
 msgid ""
 "The configuration process will attempt to restore the backup of this file to "
 "its original location."
-msgstr "Konfigurationsprocessen kommer att försöka återställa säkerhetskopian till dess ursprungliga plats."
+msgstr "Konfigurationsprocessen kommer att fÃ¶rsÃ¶ka Ã¥terstÃ¤lla sÃ¤kerhetskopian till dess ursprungliga plats."
 
 #. Type: error
 #. Description
@@ -126,4 +126,4 @@ msgstr "Konfigurationsprocessen kommer att försöka återställa säkerhetskopian ti
 msgid ""
 "Please eliminate all possible reasons that might lead to this failure, then "
 "try to configure this package again."
-msgstr "Eliminera alla möjliga orsaker som kan leda till detta misslyckande och försök sedan konfigurera detta paket igen."
+msgstr "Eliminera alla mÃ¶jliga orsaker som kan leda till detta misslyckande och fÃ¶rsÃ¶k sedan konfigurera detta paket igen."

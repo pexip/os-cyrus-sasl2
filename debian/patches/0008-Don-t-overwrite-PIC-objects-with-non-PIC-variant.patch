@@ -1,8 +1,10 @@
+Forwarded: https://github.com/cyrusimap/cyrus-sasl/pull/720
 From: Debian Cyrus SASL Team
  <pkg-cyrus-sasl2-debian-devel@lists.alioth.debian.org>
 Date: Thu, 24 Mar 2016 11:35:03 +0100
 Subject: Don't overwrite PIC objects with non-PIC variant
 
+This patch makes sure the non-PIC version of libsasldb.a, which
 is created out of non-PIC objects, is not going to overwrite the PIC version,
 which is created out of PIC objects. The PIC version is placed in .libs, and
 the non-PIC version in the current directory.  This ensures that both non-PIC
