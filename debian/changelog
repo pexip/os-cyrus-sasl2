@@ -1,4 +1,4 @@
-cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip4) pexip; urgency=medium
+cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip4) pexip-bullseye-openssl3; urgency=medium
 
   * Build-Depend on libssl-dev 3
   * d/p/openssl3-support.patch: Remove use of APIs deprecated in OpenSSL 3.0
