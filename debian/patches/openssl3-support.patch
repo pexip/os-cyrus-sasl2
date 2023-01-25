@@ -284,13 +284,15 @@ index aeb3ac3..1bb77c4 100644
  
  static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
  			 const char *authid, const char *target,
-@@ -452,7 +569,13 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -452,7 +569,15 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
  			 const sasl_utils_t *utils,
  			 char **buf, unsigned *buflen, int *result)
  {
 +#if OPENSSL_VERSION_NUMBER < 0x30000000L
      HMAC_CTX *ctx = NULL;
 +#else
++    OSSL_LIB_CTX *lib_ctx = NULL;
++    OSSL_PROVIDER *provider = NULL;
 +    EVP_MAC *mac = NULL;
 +    EVP_MAC_CTX *mac_ctx = NULL;
 +    OSSL_PARAM params[2];
@@ -298,7 +300,7 @@ index aeb3ac3..1bb77c4 100644
      unsigned char hash[EVP_MAX_MD_SIZE];
      char *upper;
      unsigned int len;
-@@ -463,6 +586,7 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -463,6 +588,7 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
  	SETERROR(utils, "cannot allocate NTLMv2 hash");
  	*result = SASL_NOMEM;
      }
@@ -306,12 +308,20 @@ index aeb3ac3..1bb77c4 100644
      else if ((ctx = _plug_HMAC_CTX_new(utils)) == NULL) {
          SETERROR(utils, "cannot allocate HMAC CTX");
          *result = SASL_NOMEM;
-@@ -494,6 +618,44 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -494,6 +620,54 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
      }
  
      if (ctx) _plug_HMAC_CTX_free(ctx, utils);
 +#else
-+    else if ((mac = EVP_MAC_fetch(NULL, "HMAC", NULL)) == NULL) {
++    else if ((lib_ctx = OSSL_LIB_CTX_new()) == NULL) {
++        SETERROR(utils, "cannot create OSSL_LIB_CTX");
++        *result = SASL_NOMEM;
++    }
++    else if ((provider = OSSL_PROVIDER_try_load(lib_ctx, "default", 0)) == NULL) {
++        SETERROR(utils, "could not load default provider");
++        *result = SASL_NOMEM;
++    }
++    else if ((mac = EVP_MAC_fetch(lib_ctx, "HMAC", NULL)) == NULL) {
 +        SETERROR(utils, "cannot allocate EVP_MAC");
 +        *result = SASL_NOMEM;
 +    }
@@ -330,7 +340,7 @@ index aeb3ac3..1bb77c4 100644
 +	ucase(upper, len);
 +	to_unicode((unsigned char *) *buf, upper, len);
 +
-+	EVP_Q_mac(NULL, "HMAC", NULL, "MD5", NULL, hash, MD4_DIGEST_LENGTH,
++	EVP_Q_mac(lib_ctx, "HMAC", NULL, "MD5", NULL, hash, MD4_DIGEST_LENGTH,
 +                  (unsigned char *) *buf, 2 * len, hash, sizeof(hash), (size_t *) &len);
 +
 +        /* V2 = HMAC-MD5(NTLMv2hash, challenge + blob) + blob */
@@ -347,6 +357,8 @@ index aeb3ac3..1bb77c4 100644
 +    }
 +    if (mac_ctx) EVP_MAC_CTX_free(mac_ctx);
 +    if (mac) EVP_MAC_free(mac);
++    if (provider) OSSL_PROVIDER_unload(provider);
++    if (lib_ctx) OSSL_LIB_CTX_free(lib_ctx);
 +#endif
  
      return V2;
