@@ -1,7 +1,14 @@
+cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip5) pexip; urgency=medium
+
+  * Merge openssl3 changes to bullseye
+
+ -- Steve McIntyre <steve.mcintyre@pexip.com>  Wed, 25 Jan 2023 14:38:21 +0000
+
 cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip4) pexip-bullseye-openssl3; urgency=medium
 
   * Build-Depend on libssl-dev 3
   * d/p/openssl3-support.patch: Remove use of APIs deprecated in OpenSSL 3.0
+  * d/p/openssl3-internal-md5.patch: Force usage of internal md5 implementation
 
  -- John-Mark Bell <jmb@pexip.com>  Mon, 26 Jul 2021 16:12:52 +0100
 
