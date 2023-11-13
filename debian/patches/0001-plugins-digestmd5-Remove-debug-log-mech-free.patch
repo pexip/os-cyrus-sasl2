@@ -1,0 +1,29 @@
+Forwarded: https://github.com/cyrusimap/cyrus-sasl/pull/721
+From: Bastian Germann <bage@debian.org>
+Date: Thu, 14 Apr 2022 12:28:40 +0200
+Subject: plugins/digestmd5: Remove debug log "mech free"
+
+The "DIGEST-MD5 common mech free" debug log message is bothering many users.
+It is not really helpful, so drop it.
+
+Fixes #386.
+
+Signed-off-by: Bastian Germann <bage@debian.org>
+---
+ plugins/digestmd5.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/plugins/digestmd5.c b/plugins/digestmd5.c
+index c6b54317..be949dce 100644
+--- a/plugins/digestmd5.c
++++ b/plugins/digestmd5.c
+@@ -1762,9 +1762,6 @@ static void digestmd5_common_mech_free(void *glob_context,
+     reauth_cache_t *reauth_cache = my_glob_context->reauth;
+     size_t n;
+ 
+-    utils->log(utils->conn, SASL_LOG_DEBUG,
+-	       "DIGEST-MD5 common mech free");
+- 
+     /* Prevent anybody else from freeing this as well */
+     my_glob_context->reauth = NULL;
+ 

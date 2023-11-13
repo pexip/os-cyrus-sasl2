@@ -3,9 +3,6 @@
 # Please read /usr/share/doc/sasl2-bin/README.Debian for details.
 #
 
-# Should saslauthd run automatically on startup? (default: no)
-START=no
-
 # Description of this saslauthd instance. Recommended.
 # (suggestion: SASL Authentication Daemon)
 DESC="SASL Authentication Daemon"

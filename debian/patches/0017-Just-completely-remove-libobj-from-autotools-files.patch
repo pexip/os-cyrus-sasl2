@@ -1,4 +1,5 @@
-From: =?utf-8?b?T25kxZllaiBTdXLDvQ==?= <ondrej@sury.org>
+Forwarded: not-needed
+From: Ondřej Surý <ondrej@sury.org>
 Date: Tue, 2 Oct 2018 08:28:27 +0000
 Subject: Just completely remove libobj from autotools files
 
@@ -83,12 +84,13 @@ diff --git a/lib/Makefile.am b/lib/Makefile.am
 index 510c139..520676c 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -65,27 +65,13 @@ endif
+@@ -65,28 +65,14 @@ endif
  common_headers = saslint.h
  common_sources = auxprop.c canonusr.c checkpw.c client.c common.c config.c external.c md5.c saslutil.c server.c seterror.c $(DLOPEN_C)
  
 -LTLIBOBJS = @LTLIBOBJS@
 -LIB_DOOR= @LIB_DOOR@
+ SASL_STATIC_LIBS = @SASL_STATIC_LIBS@
 -
  lib_LTLIBRARIES = libsasl2.la
 -if BUILD_LIBOBJ
@@ -105,7 +107,7 @@ index 510c139..520676c 100644
 -libsasl2_la_DEPENDENCIES = $(LTLIBOBJS) $(top_srcdir)/Versions
 +libsasl2_la_DEPENDENCIES = $(top_srcdir)/Versions
  
- libsasl2_la_LIBADD = $(SASL_DL_LIB) $(LIB_SOCKET) $(LIB_DOOR) $(PLUGIN_COMMON_OBJS)
+ libsasl2_la_LIBADD = $(SASL_DL_LIB) $(SASL_STATIC_LIBS) $(LIB_SOCKET) $(LIB_DOOR) $(PLUGIN_COMMON_OBJS)
 -if BUILD_LIBOBJ
 -libsasl2_la_LIBADD += libobj.la
 -endif
@@ -117,7 +119,7 @@ index 5e84b3b..65eeeec 100644
 --- a/plugins/Makefile.am
 +++ b/plugins/Makefile.am
 @@ -52,9 +52,6 @@ plugin_version = 2:25:0
- AM_CPPFLAGS=-I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/sasldb -I$(top_srcdir)/common -I$(top_builddir)/include
+ AM_CPPFLAGS=-DLIBSASL_EXPORTS=1 -I$(top_srcdir)/include -I$(top_srcdir)/lib -I$(top_srcdir)/sasldb -I$(top_srcdir)/common -I$(top_builddir)/include
  AM_LDFLAGS = -module -export-dynamic -rpath $(plugindir) -version-info $(plugin_version) -no-undefined
  
 -if BUILD_LIBOBJ
@@ -147,8 +149,8 @@ index 4cf3a3d..af1c7ca 100644
 +saslauthd_DEPENDENCIES = saslauthd-main.o
  saslauthd_LDADD	= @SASL_KRB_LIB@ \
  		  @GSSAPIBASE_LIBS@ @LIB_CRYPT@ @LIB_SIA@ \
--		  @LIB_SOCKET@ ../sasldb/libsasldb.la @LIB_PAM@ @LDAP_LIBS@ $(LTLIBOBJS_FULL) $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
-+		  @LIB_SOCKET@ ../sasldb/libsasldb.la @LIB_PAM@ @LDAP_LIBS@ $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
+-		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(LTLIBOBJS_FULL) $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
++		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
  
  testsaslauthd_SOURCES = testsaslauthd.c utils.c
  testsaslauthd_LDADD = @LIB_SOCKET@

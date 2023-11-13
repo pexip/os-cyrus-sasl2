@@ -1,0 +1,38 @@
+Forwarded: not-needed
+From: Bastian Germann <bage@debian.org>
+Date: Thu, 14 Apr 2022 17:14:01 +0200
+Subject: Self-reference pluginviewer man as saslpluginviewer
+
+pluginviewer is installed as saslpluginviewer in Debian.
+Edit the self-references in Debian to match the rename.
+
+Signed-off-by: Bastian Germann <bage@debian.org>
+---
+ utils/pluginviewer.8 | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/utils/pluginviewer.8 b/utils/pluginviewer.8
+index 9e36b20..9490ea0 100644
+--- a/utils/pluginviewer.8
++++ b/utils/pluginviewer.8
+@@ -41,9 +41,9 @@
+ .\" OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ 
+ .\"
+-.TH PLUGINVIEWER 8 "Apr 10, 2006" "CMU SASL"
++.TH SASLPLUGINVIEWER 8 "Apr 10, 2006" "CMU SASL"
+ .SH NAME
+-pluginviewer \- list loadable SASL plugins and their properties
++saslpluginviewer \- list loadable SASL plugins and their properties
+ .SH SYNOPSIS
+ .B pluginviewer
+ .RB [ -a ]
+@@ -56,7 +56,7 @@ pluginviewer \- list loadable SASL plugins and their properties
+ .RB [ -f\ FLAGS ]
+ .RB [ -p\ PATH ]
+ .SH DESCRIPTION
+-.I pluginviewer
++.I saslpluginviewer
+ can be used by a server administrator to troubleshoot SASL installations.
+ The utility can list loadable (properly configured) client and server
+ side plugins, as well as auxprop plugins.

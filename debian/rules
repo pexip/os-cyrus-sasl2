@@ -2,7 +2,7 @@
 # -*- makefile -*-
 #
 # debian/rules for CMU Cyrus SASL version 2.1
-# 
+#
 # Copyright (c) 2011 by Ondřej Surý - migrated to dh7
 # Based on previous work (c) 2006 by Fabian Fagerholm.
 # Based on previous work by Dima Barsky.
@@ -12,7 +12,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # Note that Cyrus SASL itself is published under a different license.
 
 # Debhelper control.
@@ -26,6 +26,11 @@ include /usr/share/dpkg/default.mk
 -include /usr/share/dpkg/buildtools.mk
 export CC
 
+ifneq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+# Debian's GSSAPI is known to support SPNEGO.
+export ac_cv_gssapi_supports_spnego=yes
+endif
+
 # see FEATURE AREAS in dpkg-buildflags(1)
 #export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
@@ -33,7 +38,7 @@ export CC
 # package maintainers to append CFLAGS
 export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
-export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed -Wl,-z,defs
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs
 
 # Save Berkeley DB used for building the package
 BDB_VERSION ?= $(shell LC_ALL=C dpkg-query -l 'libdb[45].[0-9]-dev' | grep ^ii | sed -e 's|.*\s\libdb\([45]\.[0-9]\)-dev\s.*|\1|')
@@ -113,9 +118,9 @@ export TMPBUILD_HEIMDAL := build-heimdal
 export TMP_MIT := debian/tmp
 export TMP_HEIMDAL := debian/tmp-heimdal
 export MIT_LDFLAGS := $(shell krb5-config.mit --libs gssapi | sed -e 's/ -l.*//')
-export MIT_CPPFLAGS := $(shell krb5-config.mit --cflags gssapi)
+export MIT_CFLAGS := $(shell krb5-config.mit --cflags gssapi)
 export HEIMDAL_LDFLAGS := $(shell krb5-config.heimdal --libs gssapi | sed -e 's/ -l.*//')
-export HEIMDAL_CPPFLAGS := $(shell krb5-config.heimdal --cflags gssapi)
+export HEIMDAL_CFLAGS := $(shell krb5-config.heimdal --cflags gssapi)
 
 AUTOFILES=acinclude.m4 aclocal.m4 config/config.sub config/config.guess \
 		  config/ltmain.sh config/libtool.m4
@@ -145,28 +150,22 @@ override_dh_auto_clean:
 	-rm -f sasl-sample-client.8 sasl-sample-server.8 gen-auth.1
 
 	# Remove build directories
-	rm -rf $(TMPBUILD_MIT) $(TMPBUILD_HEIMDAL)
+	rm -rf $(TMP_MIT) $(TMP_HEIMDAL)
 
 override_dh_auto_configure:
 	LDFLAGS="$(LDFLAGS) $(HEIMDAL_LDFLAGS)" \
-	CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS) $(HEIMDAL_CPPFLAGS)" \
+	CFLAGS="$(CFLAGS) $(HEIMDAL_CFLAGS)" \
 	dh_auto_configure -B$(TMPBUILD_HEIMDAL) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=heimdal
 
 	LDFLAGS="$(LDFLAGS) $(MIT_LDFLAGS)" \
-	CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS) $(MIT_CPPFLAGS)" \
+	CFLAGS="$(CFLAGS) $(MIT_CFLAGS)" \
 	dh_auto_configure -B$(TMPBUILD_MIT) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=mit
 
-	# Record the build-time settings for later reference
-	echo 'To build this package, configure was called as follows:' \
-		> debian/README.configure-options
-
-	grep with\ options $(TMPBUILD_MIT)/config.status | sed -e \
-		's/^.*options \\"/configure /;s/\\"$///' \
-		>> debian/README.configure-options
-
 override_dh_auto_build:
+	-mkdir docsrc/exts/themes
+	-ln -s /usr/share/sphinx_rtd_theme docsrc/exts/themes/cyrus
 	dh_auto_build -B$(TMPBUILD_HEIMDAL) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
-	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
+	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 all doc-html
 
 	# Build sample-{client,server}
 	$(MAKE) -f ../debian/sample/Makefile -C sample T=../$(TMPBUILD_MIT)
@@ -200,8 +199,6 @@ override_dh_auto_install:
 		$(TMP_MIT)/usr/share/man/man8/saslpluginviewer.8
 	install -m 644 saslauthd/saslauthd.mdoc \
 		$(TMP_MIT)/usr/share/man/man8/saslauthd.8
-	install -m 644 debian/testsaslauthd.8 \
-		$(TMP_MIT)/usr/share/man/man8/testsaslauthd.8
 	mv $(TMP_MIT)/usr/sbin/dbconverter-2 $(TMP_MIT)/usr/sbin/sasldbconverter2
 
 	# Install sample-{client,server} with Debianized names
@@ -214,6 +211,7 @@ override_dh_auto_install:
 	chrpath -d $(TMP_MIT)/usr/sbin/sasldblistusers2 \
 		$(TMP_MIT)/usr/sbin/saslpasswd2
 ifeq (,$(findstring no-gssapi,$(DEB_BUILD_OPTIONS))$(findstring pkg.cyrus-sasl2.nogssapi,$(DEB_BUILD_PROFILES)))
+	chrpath -d $(TMP_HEIMDAL)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libgs2.so.*.*.*
 	chrpath -d $(TMP_HEIMDAL)/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2/libgssapiv2.so.*.*.*
 endif
 
@@ -234,10 +232,6 @@ endif
 	install -m 755 -D debian/gen-auth/gen-auth \
 		$(TMP_MIT)/usr/bin/gen-auth
 
-	# Install logcheck snippet
-	install -m 644 -D debian/libsasl2-modules.logcheck.server \
-		$(TMP_MIT)/etc/logcheck/ignore.d.server/libsasl2-modules
-
 override_dh_install:
 	dh_install -Nlibsasl2-modules-gssapi-heimdal --sourcedir=$(TMP_MIT)
 	dh_install -plibsasl2-modules-gssapi-heimdal --sourcedir=$(TMP_HEIMDAL)
@@ -246,10 +240,10 @@ override_dh_missing:
 	dh_missing --fail-missing
 
 override_dh_installinit:
-	dh_installinit $(DH_PACKAGE_EXCLUDES) --name=saslauthd start 20 2 3 4 5 . stop 20 0 1 6 .
+	dh_installinit --no-enable $(DH_PACKAGE_EXCLUDES) --name=saslauthd start 20 2 3 4 5 . stop 20 0 1 6 .
 
-override_dh_strip:
-	dh_strip -O--dbgsym-migration='cyrus-sasl2-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~), cyrus-sasl2-mit-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~), cyrus-sasl2-heimdal-dbg (<< 2.1.26-72-g88d82a3+dfsg-1~)'
+override_dh_installchangelogs:
+	dh_installchangelogs -XChangeLog
 
 override_dh_makeshlibs:
 	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 $(DH_PACKAGE_EXCLUDES)

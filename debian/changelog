@@ -1,3 +1,188 @@
+cyrus-sasl2 (2.1.28+dfsg-10) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Explicitly B-D on libcrypt-dev (Closes: #1024644)
+
+ -- Bastian Germann <bage@debian.org>  Tue, 22 Nov 2022 17:48:33 +0100
+
+cyrus-sasl2 (2.1.28+dfsg-9) unstable; urgency=medium
+
+  * d/watch: Scan GitHub release API
+
+  [ Helmut Grohne ]
+  * Depend on ABI-less libc-dev rather than libc6-dev (Closes: #1023838)
+
+ -- Bastian Germann <bage@debian.org>  Fri, 11 Nov 2022 12:27:36 +0100
+
+cyrus-sasl2 (2.1.28+dfsg-8) unstable; urgency=medium
+
+  [ Andreas Hasenack ]
+  * Add SASL channel binding support for GSSAPI and GSS-SPNEGO
+    (LP: #1912256):
+    - d/p/0034-channel-binding-gssapi-gss-spnego.patch: add SASL channel
+      binding support for GSSAPI and GSS-SPNEGO
+    - d/p/0035-Add-support-for-setting-max-ssf-0-to-GSS-SPNEGO-1.patch:
+      allow setting maxssf to 0 when using GSS-SPNEGO inside SSL/TLS
+    - d/p/0035-Add-support-for-setting-max-ssf-0-to-GSS-SPNEGO-2.patch:
+      be more conformant to RFC4752
+
+ -- Bastian Germann <bage@debian.org>  Mon, 05 Sep 2022 14:30:39 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-7) unstable; urgency=medium
+
+  * d/tests: Relicense to GPL-3
+  * Patch: honor log level option on clients (LP: #827151)
+
+ -- Bastian Germann <bage@debian.org>  Thu, 18 Aug 2022 23:24:01 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-6) unstable; urgency=high
+
+  * d/copyright: Add debian/tests info
+
+  [ Andreas Hasenack ]
+  * d/p/0026-Gracefully-handle-failed-init.patch (Closes: #1011249)
+  * d/p/0027-Catch-errors-from-EVP_Digest-functions.patch
+  * d/p/0029-Load-OpenSSL3-legacy-provider-digestmd5.patch
+  * d/t/{control,shared-secret-mechs}: test shared secret mechanisms
+
+ -- Bastian Germann <bage@debian.org>  Thu, 19 May 2022 22:10:49 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-5) unstable; urgency=medium
+
+  * Recover upstream-compatible debian/* license
+  * debian/po: Convert non-UTF-8 to UTF-8
+  * Patch: Fix time.h check (fixes implicit-function-declarations)
+
+  [ Andreas Hasenack ]
+  * d/t/{control,pluginviewer}: test available mechanisms
+  * d/t/{control,saslauthd}: saslauthd tests with multiple mechanisms
+  * d/t/{control,gssapi}: test for SASL GSSAPI using OpenLDAP
+
+ -- Bastian Germann <bage@debian.org>  Sat, 14 May 2022 14:32:58 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-4) unstable; urgency=medium
+
+  * d/copyright: java/* files were removed upstream
+  * d/copyright: Reformat the default license's margin
+  * d/copyright: Add project's license to include/makemd5.c
+  * Move SCRAM to libsasl2-modules (Closes: #977360)
+  * Install additional GS2 module for Heimdal
+  * Remove Roberto from the Uploaders
+  * Drop 0005-Fixes-in-library-mutexes.patch
+  * Drop 0021-Fix-keytab-option-for-MIT-Kerberos.patch
+  * Remove former logcheck conffile (Closes: #1009851)
+  * lintian: Fix excessive-priority-for-library-package
+  * lintian: Fix package-contains-empty-directory
+
+ -- Bastian Germann <bage@debian.org>  Wed, 20 Apr 2022 01:01:01 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-3) unstable; urgency=high
+
+  * Set MIT/Heimdal CFLAGS instead of CPPFLAGS
+  * Drop unnecessary 0027-properly-create-libsasl2.pc.patch
+  * Prevent installing outdated ChangeLog (Closes: #1009681)
+  * Remove debug log message and its logcheck rule (Closes: #805310)
+  * Self-reference pluginviewer man as saslpluginviewer (Closes: #1009380)
+  * Get rid of broken README.configure-options
+  * Add sasldbconverter2.8 manpage
+  * d/copyright: Add missing KTH license
+  * Install libsasl.5 manpage
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster
+
+ -- Bastian Germann <bage@debian.org>  Fri, 15 Apr 2022 12:02:13 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-2) unstable; urgency=medium
+
+  * Remove cruft
+
+ -- Bastian Germann <bage@debian.org>  Fri, 25 Feb 2022 18:58:54 +0100
+
+cyrus-sasl2 (2.1.28+dfsg-1) experimental; urgency=medium
+
+  * Drop upstream patches
+  * Import new release signing key
+  * Reset repacksuffix
+  * New upstream version 2.1.28+dfsg (CVE-2022-24407)
+  * Rebase 0027-properly-create-libsasl2.pc.patch
+
+ -- Bastian Germann <bage@debian.org>  Tue, 22 Feb 2022 23:40:47 +0100
+
+cyrus-sasl2 (2.1.27+dfsg2-3) unstable; urgency=medium
+
+  [ Andreas Hasenack ]
+  * Fix configure.ac for autoconf 2.70 (Closes: #1003355, #1000152)
+
+ -- Bastian Germann <bage@debian.org>  Tue, 11 Jan 2022 11:25:37 +0100
+
+cyrus-sasl2 (2.1.27+dfsg2-2) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: (Closes: #928512)
+    + cross.patch: Support caching SPNEGO support test.
+    + Provide SPNEGO support test result.
+
+  [ Vagrant Cascadian ]
+  * Set date in man pages (Closes: #995145)
+
+ -- Bastian Germann <bage@debian.org>  Wed, 17 Nov 2021 01:23:49 +0100
+
+cyrus-sasl2 (2.1.27+dfsg2-1) unstable; urgency=medium
+
+  * Add bage to uploaders (Closes: #799864)
+  * Use upstream patches where possible
+  * Amend off-by-one in _sasl_add_string function
+  * Replace some patches by upstream equivalents
+  * Apply the patches in order of to their prefixes
+  * Add missing caret (^) in logcheck rule (Closes: #830764)
+  * Remove unnecessary GPL copy
+  * Add missing copyright/licenses
+  * Repack, getting rid of more problematic files
+  * Build html documentation
+  * Make the package rebuildable
+  * Remove outdated README.Debian info
+  * Disable autostart via debhelper
+  * Drop unnecessary patch
+  * Remove alternative, old build dep libmysqlclient-dev
+    Annotate documentation Build-Depends with :native
+
+  [ Frédéric Brière ]
+  * Make logcheck snippet compatible with systemd journal
+
+ -- Bastian Germann <bage@debian.org>  Sun, 14 Nov 2021 14:11:18 +0100
+
+cyrus-sasl2 (2.1.27+dfsg-2.3) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * d/watch: Check the github releases page
+  * Get rid of a patch's patch
+  * Recover upstream-compatible patch license (Closes: #996866)
+    + Relicense libobj patch
+  * Fix lintian: unused-override
+  * Patch: Prevent double free of RC4 context (Closes: #722611)
+  * Rename double-prefix patches
+
+  [ Debian Janitor ]
+  * Trim trailing whitespace.
+  * Use secure copyright file specification URI.
+  * debian/copyright: use spaces rather than tabs to start continuation lines.
+  * Re-export upstream signing key without extra signatures.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit (from ./configure), Repository, Repository-Browse.
+  * Fix day-of-week for changelog entry 2.1.7-1.
+  * Avoid explicitly specifying -Wl,--as-needed linker flag.
+
+ -- Bastian Germann <bage@debian.org>  Fri, 05 Nov 2021 21:58:22 +0100
+
+cyrus-sasl2 (2.1.27+dfsg-2.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+
+  [ Vagrant Cascadian ]
+  * Fix Sphinx errors (Closes: #995123)
+
+ -- Michael Banck <michael.banck@credativ.de>  Wed, 27 Oct 2021 17:57:34 +0200
+
 cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip5) pexip; urgency=medium
 
   * Merge openssl3 changes to bullseye
@@ -29,14 +214,6 @@ cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1pexip1) pexip; urgency=medium
   * Initial bullseye build
 
  -- Mark Hymers <mark.hymers@pexip.com>  Thu, 02 Jun 2022 14:42:06 +0100
-
-cyrus-sasl2 (2.1.27+dfsg-2.1+deb11u1) bullseye-security; urgency=high
-
-  * Non-maintainer upload by the Security Team.
-  * Fix _sasl_add_string
-  * Escape password for SQL insert/update commands (CVE-2022-24407)
-
- -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 25 Feb 2022 09:27:30 +0100
 
 cyrus-sasl2 (2.1.27+dfsg-2.1) unstable; urgency=medium
 
@@ -105,7 +282,7 @@ cyrus-sasl2 (2.1.27+dfsg-1~exp1) experimental; urgency=medium
   * New upstream version 2.1.27+dfsg
   * Bump policy to current version and debhelper compat level to 12
   * Upstream supports only a single plugindir now, switch to M-A plugindir
-  * Build libsasl2-modules-gssapi-heimdal against heimdal 
+  * Build libsasl2-modules-gssapi-heimdal against heimdal
     + Install heimdal build into separate tmp directory and strip rpath
       from it (Closes: #880393)
   * Replace extra priority with optional
@@ -402,7 +579,7 @@ cyrus-sasl2 (2.1.25.dfsg1-3) unstable; urgency=low
 
 cyrus-sasl2 (2.1.25.dfsg1-2) unstable; urgency=low
 
-  [ Roberto C. Sanchez ]  
+  [ Roberto C. Sanchez ]
   * Update README.source to reflect quilt usage instead of dpatch
 
   [ Ondřej Surý ]
@@ -640,7 +817,7 @@ cyrus-sasl2 (2.1.23.dfsg1-2) unstable; urgency=high
 cyrus-sasl2 (2.1.23.dfsg1-1.1) unstable; urgency=medium
 
   * Build-Depend also on mysqlclient-dev. Closes: #542904
-  * Conflict cyrus-sasl2-heimdal-dbg as both packages provide the file 
+  * Conflict cyrus-sasl2-heimdal-dbg as both packages provide the file
     /usr/lib/debug/usr/lib/sasl2/libgssapiv2.so.2.0.23 Closes: #530781
 
  -- Andreas Barth <aba@not.so.argh.org>  Sat, 29 Aug 2009 11:47:55 +0200
@@ -1266,7 +1443,7 @@ cyrus-sasl2 (2.1.19-1.4) unstable; urgency=low
     Closes: #276637.
 
  -- Andreas Barth <aba@debian.org>  Fri, 15 Oct 2004 20:26:41 +0200
- 
+
 cyrus-sasl2 (2.1.19-1.3) unstable; urgency=high
 
   * NMU
@@ -1336,7 +1513,7 @@ cyrus-sasl2 (2.1.19-1.1) unstable; urgency=medium
     * upstream CVS: plugins/gssapi.c: Memory management cleanup
     * upstream CVS: configure.in, plugins/gssapi.c: Wrap all GSS calls
       in mutexes when required by the implementation (closes: #202836)
-      THIS PATCH PROBABLY SHOULD BE SET TO DISABLED BY DEFAULT WHEN MIT 
+      THIS PATCH PROBABLY SHOULD BE SET TO DISABLED BY DEFAULT WHEN MIT
       KERBEROS 1.3.5 ENTERS UNSTABLE
       (see https://bugzilla.andrew.cmu.edu/show_bug.cgi?id=2255)
     * Libtool is refreshed at every build, so this upload closes: #262339
@@ -1353,9 +1530,9 @@ cyrus-sasl2 (2.1.19-1) unstable; urgency=medium
   * New upstream version (Closes: #259503, #259658)
   * Acknowledge the last NMU (closes: #254818)
   * Build against libdb4.2 (closes: #253894)
-  * Fixed the path to saslauthd.conf in the saslauthd 
+  * Fixed the path to saslauthd.conf in the saslauthd
     man page (Closes: #254454)
-  
+
  -- Dima Barsky <dima@debian.org>  Sun,  4 Jul 2004 20:38:53 +0100
 
 cyrus-sasl2 (2.1.18-4.1) unstable; urgency=low
@@ -1515,7 +1692,7 @@ cyrus-sasl2 (2.1.9-4) unstable; urgency=low
 
 cyrus-sasl2 (2.1.9-3) unstable; urgency=low
 
-  * Added AM_MAINTAINER_MODE to configure.in 
+  * Added AM_MAINTAINER_MODE to configure.in
 
  -- Dima Barsky <dima@debian.org>  Sat, 26 Oct 2002 01:46:13 +0100
 
@@ -1530,7 +1707,7 @@ cyrus-sasl2 (2.1.9-1) unstable; urgency=low
 
   * New upstream release
   * shlibs now refers to the current version (Closes: #163845)
-  * sasl2-bin now uses dpkg-statoverride to manage permissions of 
+  * sasl2-bin now uses dpkg-statoverride to manage permissions of
     /var/run/saslauthd and /etc/sasldb2 (Closes: #163042, #164393)
 
  -- Dima Barsky <dima@debian.org>  Mon, 21 Oct 2002 22:01:01 +0100
@@ -1545,7 +1722,7 @@ cyrus-sasl2 (2.1.7-2) unstable; urgency=low
 
   * Build with versioned symbols
   * Another split: KERBEROS mechanism is now in a separate module (Closes: #154153)
-  * README.Debian has been updated a while ago, we can 
+  * README.Debian has been updated a while ago, we can
     close bug 146543 now. (Closes: #146543)
 
  -- Dima Barsky <dima@debian.org>  Mon, 30 Sep 2002 17:23:12 +0100
@@ -1554,10 +1731,10 @@ cyrus-sasl2 (2.1.7-1) unstable; urgency=low
 
   * New upstream version (Closes: #156286, #158296)
   * Enabled ldap and mysql (Closes: #155025, #154965)
-  * /etc/sasldb2 and /var/run/saslauthd now belong to the group "sasl" 
+  * /etc/sasldb2 and /var/run/saslauthd now belong to the group "sasl"
     and are group-readable (Closes: #151798)
 
- -- Dima Barsky <dima@debian.org>  Thu, 25 Sep 2002 15:51:12 +0100
+ -- Dima Barsky <dima@debian.org>  Wed, 25 Sep 2002 15:51:12 +0100
 
 cyrus-sasl2 (2.1.6-1) unstable; urgency=low
 
@@ -1568,7 +1745,7 @@ cyrus-sasl2 (2.1.6-1) unstable; urgency=low
 
 cyrus-sasl2 (2.1.5-7) unstable; urgency=low
 
-  * Separated heimdal-dependent plugins into the 
+  * Separated heimdal-dependent plugins into the
     libsasl2-modules-gssapi-heimdal package
   * Updated libtool to the latest version (Closes: #146229)
   * Changed permissions on /var/run/saslauthd to 711 (Closes: #151796)
@@ -1612,8 +1789,8 @@ cyrus-sasl2 (2.1.5-1) unstable; urgency=low
   * Added explicit rule for building libsasl2.a (Closes: #144200)
   * Added a warning about /dev/random to README.Debian (Closes: #146982)
   * /var/run/saslauthd/mux is now world-readable (Closes: #147484)
-  * Modified sasl2-bin.default to make it clear that MECHANISMS is a 
-    space separated lists, so it should be quoted if there is more 
+  * Modified sasl2-bin.default to make it clear that MECHANISMS is a
+    space separated lists, so it should be quoted if there is more
     than one item in it (Closes: #146790)
 
  -- Dima Barsky <dima@debian.org>  Sun, 30 Jun 2002 01:19:16 +0100
@@ -1629,7 +1806,7 @@ cyrus-sasl2 (2.1.2-1) unstable; urgency=low
   * New upstream version
   * Changed --without-gssapi to --disable-gssapi
   * Closes: #131792
-  
+
  -- Dima Barsky <dima@debian.org>  Tue, 26 Mar 2002 22:29:12 +0000
 
 cyrus-sasl2 (2.1.1-0.2) unstable; urgency=low

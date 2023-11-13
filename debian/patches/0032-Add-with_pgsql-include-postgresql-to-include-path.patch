@@ -1,4 +1,5 @@
-From: =?utf-8?b?T25kxZllaiBTdXLDvQ==?= <ondrej@sury.org>
+Forwarded: https://github.com/cyrusimap/cyrus-sasl/pull/719
+From: Ondřej Surý <ondrej@sury.org>
 Date: Tue, 25 Oct 2016 12:33:27 +0200
 Subject: Add ${with_pgsql}include/postgresql/ to include path
 
