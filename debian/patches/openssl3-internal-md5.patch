@@ -1,16 +1,16 @@
-diff --git a/plugins/ntlm.c b/plugins/ntlm.c
-index aeb3ac3..4a2816b 100644
---- a/plugins/ntlm.c
-+++ b/plugins/ntlm.c
-@@ -78,7 +78,6 @@
+Index: os-cyrus-sasl2/plugins/ntlm.c
+===================================================================
+--- os-cyrus-sasl2.orig/plugins/ntlm.c
++++ os-cyrus-sasl2/plugins/ntlm.c
+@@ -81,7 +81,6 @@
+ #ifdef OPENSSL_NO_MD4
+ #error No MD4 support in OpenSSL
  #endif
- 
- #include <openssl/md4.h>
 -#include <openssl/md5.h>
  #include <openssl/hmac.h>
  #include <openssl/des.h>
  #include <openssl/opensslv.h>
-@@ -100,7 +99,6 @@
+@@ -120,7 +119,6 @@ typedef unsigned char des_key_schedule[8
  #include "crypto-compat.h"
  
  #include <sasl.h>
@@ -18,10 +18,10 @@ index aeb3ac3..4a2816b 100644
  #include <saslplug.h>
  
  #include "plugin_common.h"
-diff --git a/plugins/otp.c b/plugins/otp.c
-index 3adbff0..9bf45f6 100644
---- a/plugins/otp.c
-+++ b/plugins/otp.c
+Index: os-cyrus-sasl2/plugins/otp.c
+===================================================================
+--- os-cyrus-sasl2.orig/plugins/otp.c
++++ os-cyrus-sasl2/plugins/otp.c
 @@ -54,10 +54,8 @@
  #include <assert.h>
  
@@ -33,10 +33,10 @@ index 3adbff0..9bf45f6 100644
  #include <saslplug.h>
  
  #include "plugin_common.h"
-diff --git a/plugins/passdss.c b/plugins/passdss.c
-index 2f81d44..c3c0b36 100644
---- a/plugins/passdss.c
-+++ b/plugins/passdss.c
+Index: os-cyrus-sasl2/plugins/passdss.c
+===================================================================
+--- os-cyrus-sasl2.orig/plugins/passdss.c
++++ os-cyrus-sasl2/plugins/passdss.c
 @@ -67,7 +67,6 @@
  /* for digest and cipher support */
  #include <openssl/evp.h>
@@ -53,10 +53,10 @@ index 2f81d44..c3c0b36 100644
  #include <saslplug.h>
  
  #include "plugin_common.h"
-diff --git a/plugins/srp.c b/plugins/srp.c
-index 7cf36c2..2a7146f 100644
---- a/plugins/srp.c
-+++ b/plugins/srp.c
+Index: os-cyrus-sasl2/plugins/srp.c
+===================================================================
+--- os-cyrus-sasl2.orig/plugins/srp.c
++++ os-cyrus-sasl2/plugins/srp.c
 @@ -93,7 +93,6 @@ typedef unsigned short uint32;
  #include "crypto-compat.h"
  
