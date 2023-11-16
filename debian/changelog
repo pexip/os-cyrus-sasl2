@@ -1,3 +1,9 @@
+cyrus-sasl2 (2.1.28+dfsg-10pexip1) pexip-bookworm; urgency=medium
+
+  * Initial bookworm build
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 16 Nov 2023 09:57:10 +0000
+
 cyrus-sasl2 (2.1.28+dfsg-10) unstable; urgency=medium
 
   [ Helmut Grohne ]
