@@ -1,5 +1,3 @@
-diff --git a/plugins/digestmd5.c b/plugins/digestmd5.c
-index f184c16..7d2e180 100644
 --- a/plugins/digestmd5.c
 +++ b/plugins/digestmd5.c
 @@ -63,6 +63,7 @@
@@ -31,7 +29,15 @@ index f184c16..7d2e180 100644
  #  endif /* OpenSSL 0.9.7+ w/o old DES support */
  # else /* system DES library */
  #ifdef HAVE_DES_H
-@@ -861,6 +876,87 @@ struct des_context_s {
+@@ -84,6 +99,7 @@
+ #if OPENSSL_VERSION_NUMBER >= 0x30000000L
+ #  include <openssl/provider.h>
+ #  include <openssl/crypto.h>
++#  include <openssl/evp.h>
+ #endif
+ 
+ #ifdef WIN32
+@@ -873,6 +889,87 @@
  
  typedef struct des_context_s des_context_t;
  
@@ -119,11 +125,9 @@ index f184c16..7d2e180 100644
  /* slide the first 7 bytes of 'inbuf' into the high seven bits of the
     first 8 bytes of 'keybuf'. 'keybuf' better be 8 bytes long or longer. */
  static void slidebits(unsigned char *keybuf, unsigned char *inbuf)
-diff --git a/plugins/ntlm.c b/plugins/ntlm.c
-index aeb3ac3..1bb77c4 100644
 --- a/plugins/ntlm.c
 +++ b/plugins/ntlm.c
-@@ -83,6 +83,7 @@
+@@ -86,6 +86,7 @@
  #include <openssl/des.h>
  #include <openssl/opensslv.h>
  #if (OPENSSL_VERSION_NUMBER >= 0x0090700f) && \
@@ -131,7 +135,7 @@ index aeb3ac3..1bb77c4 100644
       !defined(OPENSSL_ENABLE_OLD_DES_SUPPORT)
  # define des_cblock DES_cblock
  # define des_key_schedule DES_key_schedule
-@@ -94,6 +95,22 @@
+@@ -97,6 +98,22 @@
           DES_key_sched((k),&(ks))
  # define des_ecb_encrypt(i,o,k,e) \
  	 DES_ecb_encrypt((i),(o),&(k),(e))
@@ -154,7 +158,7 @@ index aeb3ac3..1bb77c4 100644
  #endif /* OpenSSL 0.9.7+ w/o old DES support */
  
  /* for legacy libcrypto support */
-@@ -333,6 +350,74 @@ static int unload_buffer(const sasl_utils_t *utils, const u_char *buf,
+@@ -336,6 +353,74 @@
      return SASL_OK;
  }
  
@@ -229,7 +233,7 @@ index aeb3ac3..1bb77c4 100644
  /*
   * NTLM encryption/authentication routines per section 2.10 of
   * draft-leach-cifs-v1-spec-02
-@@ -395,8 +480,38 @@ static unsigned char *P16_nt(unsigned char *P16, sasl_secret_t *passwd,
+@@ -398,8 +483,38 @@
  	*result = SASL_NOMEM;
      }
      else {
@@ -268,7 +272,7 @@ index aeb3ac3..1bb77c4 100644
  	*result = SASL_OK;
      }
      return P16;
-@@ -422,6 +537,7 @@ static unsigned char *P24(unsigned char *P24, unsigned char *P21,
+@@ -425,6 +540,7 @@
      return P24;
  }
  
@@ -276,7 +280,7 @@ index aeb3ac3..1bb77c4 100644
  static HMAC_CTX *_plug_HMAC_CTX_new(const sasl_utils_t *utils)
  {
      utils->log(NULL, SASL_LOG_DEBUG, "_plug_HMAC_CTX_new()");
-@@ -444,6 +560,7 @@ static void _plug_HMAC_CTX_free(HMAC_CTX *ctx, const sasl_utils_t *utils)
+@@ -447,6 +563,7 @@
      utils->free(ctx);
  #endif
  }
@@ -284,7 +288,7 @@ index aeb3ac3..1bb77c4 100644
  
  static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
  			 const char *authid, const char *target,
-@@ -452,7 +569,15 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -455,7 +572,15 @@
  			 const sasl_utils_t *utils,
  			 char **buf, unsigned *buflen, int *result)
  {
@@ -300,7 +304,7 @@ index aeb3ac3..1bb77c4 100644
      unsigned char hash[EVP_MAX_MD_SIZE];
      char *upper;
      unsigned int len;
-@@ -463,6 +588,7 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -466,6 +591,7 @@
  	SETERROR(utils, "cannot allocate NTLMv2 hash");
  	*result = SASL_NOMEM;
      }
@@ -308,7 +312,7 @@ index aeb3ac3..1bb77c4 100644
      else if ((ctx = _plug_HMAC_CTX_new(utils)) == NULL) {
          SETERROR(utils, "cannot allocate HMAC CTX");
          *result = SASL_NOMEM;
-@@ -494,6 +620,54 @@ static unsigned char *V2(unsigned char *V2, sasl_secret_t *passwd,
+@@ -497,6 +623,54 @@
      }
  
      if (ctx) _plug_HMAC_CTX_free(ctx, utils);
@@ -363,11 +367,9 @@ index aeb3ac3..1bb77c4 100644
  
      return V2;
  }
-diff --git a/plugins/otp.c b/plugins/otp.c
-index aeb3ac3..1bb77c4 100644
 --- a/plugins/otp.c
 +++ b/plugins/otp.c
-@@ -1487,8 +1487,10 @@ int otp_server_plug_init(const sasl_utils_t *utils,
+@@ -1487,8 +1487,10 @@
      *pluglist = otp_server_plugins;
      *plugcount = 1;  
      
@@ -378,7 +380,7 @@ index aeb3ac3..1bb77c4 100644
      
      return SASL_OK;
  }
-@@ -1888,8 +1890,10 @@ int otp_client_plug_init(sasl_utils_t *utils,
+@@ -1888,8 +1890,10 @@
      *pluglist = otp_client_plugins;
      *plugcount = 1;
      
@@ -389,11 +391,9 @@ index aeb3ac3..1bb77c4 100644
      
      return SASL_OK;
  }
-diff --git a/saslauthd/lak.c b/saslauthd/lak.c
-index 8eea8e3..05c45bc 100644
 --- a/saslauthd/lak.c
 +++ b/saslauthd/lak.c
-@@ -735,7 +735,7 @@ int lak_init(
+@@ -736,7 +736,7 @@
  		return rc;
  	}
  
@@ -402,7 +402,7 @@ index 8eea8e3..05c45bc 100644
  	OpenSSL_add_all_digests();
  #endif
  
-@@ -756,7 +756,7 @@ void lak_close(
+@@ -757,7 +757,7 @@
  
  	free(lak);
  
