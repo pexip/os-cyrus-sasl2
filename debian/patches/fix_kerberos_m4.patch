@@ -1,0 +1,13 @@
+--- a/m4/kerberos_v4.m4
++++ b/m4/kerberos_v4.m4
+@@ -14,8 +14,8 @@
+ 
+   if test "$with_openssl" != no; then
+     dnl check for openssl installing -lcrypto, then make vanilla check
+-    AC_CHECK_LIB(crypto, des_cbc_encrypt, [
+-        AC_CHECK_HEADER(openssl/des.h, [AC_DEFINE(WITH_SSL_DES,[],[Use OpenSSL DES Implementation])
++    AC_CHECK_LIB(crypto, EVP_CipherInit, [
++        AC_CHECK_HEADER(openssl/evp.h, [AC_DEFINE(WITH_SSL_DES,[],[Use OpenSSL DES Implementation])
+                                        LIB_DES="-lcrypto";
+                                        with_des=yes],
+                        with_des=no)],

@@ -24,3 +24,4 @@
 0035-Add-support-for-setting-max-ssf-0-to-GSS-SPNEGO-2.patch
 openssl3-support.patch
 openssl3-internal-md5.patch
+fix_kerberos_m4.patch
