@@ -1,0 +1,76 @@
+Origin: https://github.com/cyrusimap/cyrus-sasl/pull/828
+From: Bastian Germann <bage@debian.org>
+Date: Wed, 20 Mar 2024 01:03:40 +0100
+Subject: Extend the time_t format specifiers to long long
+
+In some format strings, it is expected that time_t is the same size as long.
+long is 32 bit for 32 bit architectures, while time_t might be 64 bit.
+Extend the format string specifiers to long long, which can hold a
+time_t regardless of the platform and libc configuration.
+
+Closes: #484
+
+Signed-off-by: Bastian Germann <bage@debian.org>
+---
+ lib/saslutil.c        |  4 ++--
+ plugins/otp.c         | 10 ++++++----
+ saslauthd/saslcache.c |  2 +-
+ 3 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/lib/saslutil.c b/lib/saslutil.c
+index 46c628c7..94493243 100644
+--- a/lib/saslutil.c
++++ b/lib/saslutil.c
+@@ -280,9 +280,9 @@ int sasl_mkchal(sasl_conn_t *conn,
+   time(&now);
+ 
+   if (hostflag && conn->serverFQDN)
+-    snprintf(buf,maxlen, "<%lu.%lu@%s>", randnum, (unsigned long)now, conn->serverFQDN); /* don't care much about time 32bit overlap */
++    snprintf(buf,maxlen, "<%lu.%lld@%s>", randnum, (long long)now, conn->serverFQDN);
+   else
+-    snprintf(buf,maxlen, "<%lu.%lu>", randnum, (unsigned long)now);
++    snprintf(buf,maxlen, "<%lu.%lld>", randnum, (long long)now);
+ 
+   return (int) strlen(buf);
+ }
+diff --git a/plugins/otp.c b/plugins/otp.c
+index 197c993c..264b3b08 100644
+--- a/plugins/otp.c
++++ b/plugins/otp.c
+@@ -639,8 +639,8 @@ static int make_secret(const sasl_utils_t *utils, const char *alg,
+     bin2hex(otp, OTP_HASH_SIZE, buf);
+     buf[2*OTP_HASH_SIZE] = '\0';
+     
+-    sprintf(data, "%s\t%04d\t%s\t%s\t%020ld",
+-	    alg, seq, seed, buf, timeout);
++    sprintf(data, "%s\t%04u\t%s\t%s\t%020lld",
++	    alg, seq, seed, buf, (long long)timeout);
+     
+     return SASL_OK;
+ }
+@@ -700,8 +700,10 @@ static int parse_secret(const sasl_utils_t *utils,
+ 	    return SASL_FAIL;
+ 	}
+ 	
+-	sscanf(secret, "%s\t%04d\t%s\t%s\t%020ld",
+-	       alg, seq, seed, buf, timeout);
++	long long tmptimeout;
++	sscanf(secret, "%s\t%04u\t%s\t%s\t%020lld",
++	       alg, seq, seed, buf, &tmptimeout);
++	*timeout = tmptimeout;
+ 	
+ 	hex2bin(buf, otp, OTP_HASH_SIZE);
+ 	
+diff --git a/saslauthd/saslcache.c b/saslauthd/saslcache.c
+index c0249626..2cbee77d 100644
+--- a/saslauthd/saslcache.c
++++ b/saslauthd/saslcache.c
+@@ -172,7 +172,7 @@ void dump_cache_users(void) {
+ 			fprintf(stderr, "\"%s\",", ref_bucket->creds + ref_bucket->user_offt);
+ 			fprintf(stderr, "\"%s\",", ref_bucket->creds + ref_bucket->realm_offt);
+ 			fprintf(stderr, "\"%s\",", ref_bucket->creds + ref_bucket->service_offt);
+-			fprintf(stderr, "\"%lu\",", ref_bucket->created);
++			fprintf(stderr, "\"%lld\",", (long long)ref_bucket->created);
+ 			fprintf(stderr, "\"%s\"\n", make_time(ref_bucket->created));
+ 		}
+ 	}

@@ -2,13 +2,12 @@ Source: cyrus-sasl2
 Section: libs
 Priority: optional
 Maintainer: Debian Cyrus Team <team+cyrus@tracker.debian.org>
-Uploaders: Fabian Fagerholm <fabbe@debian.org>,
-           Ondřej Surý <ondrej@debian.org>,
-           Bastian Germann <bage@debian.org>,
-           Adam Conrad <adconrad@0c3.net>
+Uploaders: Ondřej Surý <ondrej@debian.org>,
 Standards-Version: 4.3.0.1
-Build-Depends: chrpath,
-               debhelper-compat (= 12),
+Build-Depends: debhelper-compat (= 12),
+               libpod-pom-view-restructured-perl:native <!nodoc>,
+Build-Depends-Arch:
+               chrpath,
                default-libmysqlclient-dev <!pkg.cyrus-sasl2.nosql>,
                docbook-to-man,
                groff-base,
@@ -19,12 +18,12 @@ Build-Depends: chrpath,
                libkrb5-dev <!pkg.cyrus-sasl2.nogssapi>,
                libldap2-dev <!pkg.cyrus-sasl2.noldap>,
                libpam0g-dev,
-               libpod-pom-view-restructured-perl:native,
                libpq-dev <!pkg.cyrus-sasl2.nosql>,
                libsqlite3-dev,
                libssl-dev,
                po-debconf,
-               python3-sphinx-rtd-theme:native,
+               python3-sphinx <!nodoc>
+Build-Depends-Indep: python3-sphinx-rtd-theme,
 Build-Conflicts: heimdal-dev
 Vcs-Browser: https://salsa.debian.org/debian/cyrus-sasl2
 Vcs-Git: https://salsa.debian.org/debian/cyrus-sasl2.git
@@ -36,7 +35,6 @@ Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
 Depends: db-util,
          libsasl2-2 (>= ${binary:Version}),
-         lsb-base,
          ${misc:Depends},
          ${perl:Depends},
          ${shlibs:Depends}
@@ -50,8 +48,10 @@ Description: Cyrus SASL - administration programs for SASL users database
 Package: cyrus-sasl2-doc
 Section: doc
 Architecture: all
+Build-Profiles: <!nodoc>
 Depends: ${misc:Depends},
          sphinx-rtd-theme-common
+Multi-Arch: foreign
 Description: Cyrus SASL - documentation
  This is the Cyrus SASL API implementation, version 2.1. See package
  libsasl2-2 and RFC 2222 for more information.
@@ -169,6 +169,7 @@ Section: libdevel
 Architecture: any
 Depends: libc-dev,
          libsasl2-2 (= ${binary:Version}),
+         libssl-dev,
          ${misc:Depends}
 Description: Cyrus SASL - development files for authentication abstraction library
  This is the Cyrus SASL API implementation, version 2. See package

@@ -86,12 +86,6 @@ start_instance()
 	# Load defaults file for this instance.
 	. $1
 
-	# If the daemon is not enabled, give the user a warning and stop.
-	if [ "$START" != "yes" ]; then
-		log_warning_msg "To enable $NAME, edit $1 and set START=yes"
-		return 0
-	fi
-
 	# If the short name of this instance is undefined, warn the user
 	# but choose a default name.
 	if [ -z "$NAME" ]; then

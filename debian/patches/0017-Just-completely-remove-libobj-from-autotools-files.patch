@@ -107,7 +107,7 @@ index 510c139..520676c 100644
 -libsasl2_la_DEPENDENCIES = $(LTLIBOBJS) $(top_srcdir)/Versions
 +libsasl2_la_DEPENDENCIES = $(top_srcdir)/Versions
  
- libsasl2_la_LIBADD = $(SASL_DL_LIB) $(SASL_STATIC_LIBS) $(LIB_SOCKET) $(LIB_DOOR) $(PLUGIN_COMMON_OBJS)
+ libsasl2_la_LIBADD = $(SASL_DL_LIB) $(SASL_STATIC_LIBS) $(LIB_SOCKET) $(LIB_DOOR) $(PLUGIN_COMMON_OBJS) -lcrypto
 -if BUILD_LIBOBJ
 -libsasl2_la_LIBADD += libobj.la
 -endif
@@ -141,16 +141,15 @@ index 4cf3a3d..af1c7ca 100644
  CRYPTO_COMPAT_OBJS = $(top_builddir)/common/libcrypto_compat.la
  if AUTH_SASLDB
  LIBSASLDB_OBJS = $(top_builddir)/sasldb/libsasldb.la
-@@ -22,10 +20,10 @@ saslauthd_SOURCES = mechanisms.c globals.h \
-                     ipc_unix.c ipc_doors.c saslauthd-main.c saslauthd-main.h \
- 		    md5.c saslauthd_md5.h
+@@ -22,9 +20,9 @@ saslauthd_SOURCES = mechanisms.c globals.h \
+                     ipc_unix.c ipc_doors.c saslauthd-main.c saslauthd-main.h
  EXTRA_saslauthd_sources = getaddrinfo.c getnameinfo.c
 -saslauthd_DEPENDENCIES = saslauthd-main.o $(LTLIBOBJS_FULL)
 +saslauthd_DEPENDENCIES = saslauthd-main.o
  saslauthd_LDADD	= @SASL_KRB_LIB@ \
  		  @GSSAPIBASE_LIBS@ @LIB_CRYPT@ @LIB_SIA@ \
--		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(LTLIBOBJS_FULL) $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
-+		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS)
+-		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(LTLIBOBJS_FULL) $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS) -lcrypto
++		  @LIB_SOCKET@ @SASL_DB_LIB@ @LIB_PAM@ @LDAP_LIBS@ $(CRYPTO_COMPAT_OBJS) $(LIBSASLDB_OBJS) -lcrypto
  
  testsaslauthd_SOURCES = testsaslauthd.c utils.c
  testsaslauthd_LDADD = @LIB_SOCKET@

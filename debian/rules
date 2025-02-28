@@ -15,10 +15,6 @@
 #
 # Note that Cyrus SASL itself is published under a different license.
 
-# Debhelper control.
-export DH_ALWAYS_EXCLUDE=CVS
-#export DH_VERBOSE=1 # uncomment this to turn on verbose mode
-
 # Enable package hardening through dpkg-buildflags
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DPKG_EXPORT_BUILDFLAGS = 1
@@ -31,12 +27,7 @@ ifneq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
 export ac_cv_gssapi_supports_spnego=yes
 endif
 
-# see FEATURE AREAS in dpkg-buildflags(1)
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-
 # see ENVIRONMENT in dpkg-buildflags(1)
-# package maintainers to append CFLAGS
-export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs
 
@@ -105,8 +96,7 @@ CONFIGURE_COMMON_OPTIONS= \
 	--with-configdir=/etc/sasl2:/etc/sasl:/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2:/usr/lib/sasl2 \
 	--with-plugindir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 \
 	--sysconfdir=/etc \
-	--with-devrandom=/dev/urandom \
-	--with-sphinx-build
+	--with-devrandom=/dev/urandom
 
 # Some convenience variables
 export TMPBUILD_MIT := build-mit
@@ -143,12 +133,17 @@ override_dh_auto_clean:
 			lib/anonymous.c lib/login.c lib/ntlm.c lib/sql.c lib/ldapdb.c
 
 	# Remove generated man pages
-	-rm -f sasl-sample-client.8 sasl-sample-server.8 gen-auth.1
+	-rm -f sasl-sample-client.8 sasl-sample-server.8
 
 	# Remove build directories
 	rm -rf $(TMP_MIT) $(TMP_HEIMDAL)
 
-override_dh_auto_configure:
+override_dh_auto_configure-indep:
+	dh_auto_configure -- --with-sphinx-build
+
+override_dh_auto_configure-arch:
+	$(file > common/crypto-compat.c,)
+	$(file > common/crypto-compat.h,)
 	LDFLAGS="$(LDFLAGS) $(HEIMDAL_LDFLAGS)" \
 	CFLAGS="$(CFLAGS) $(HEIMDAL_CFLAGS)" \
 	dh_auto_configure -B$(TMPBUILD_HEIMDAL) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=heimdal
@@ -157,24 +152,28 @@ override_dh_auto_configure:
 	CFLAGS="$(CFLAGS) $(MIT_CFLAGS)" \
 	dh_auto_configure -B$(TMPBUILD_MIT) -- $(CONFIGURE_COMMON_OPTIONS) --with-gss_impl=mit
 
-override_dh_auto_build:
+override_dh_auto_build-indep:
 	-mkdir docsrc/exts/themes
 	-ln -s /usr/share/sphinx_rtd_theme docsrc/exts/themes/cyrus
+	dh_auto_build -- doc-html
+
+override_dh_auto_build-arch:
+	-mkdir docsrc/exts/themes
 	dh_auto_build -B$(TMPBUILD_HEIMDAL) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
-	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 all doc-html
+	dh_auto_build -B$(TMPBUILD_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 all
 
 	# Build sample-{client,server}
-	$(MAKE) -f ../debian/sample/Makefile -C sample T=../$(TMPBUILD_MIT)
+	$(MAKE) -f debian/sample/Makefile T=$(TMPBUILD_MIT)
 
 	# Build the sasl-sample-client and sasl-sample-server man pages.
 	/usr/bin/docbook-to-man debian/sasl-sample-client.sgml \
 		> sasl-sample-client.8
 	/usr/bin/docbook-to-man debian/sasl-sample-server.sgml \
 		> sasl-sample-server.8
-	# Build the gen-auth man page
-	/usr/bin/pod2man --stderr debian/gen-auth/gen-auth >gen-auth.1
 
-override_dh_auto_install:
+override_dh_auto_install-indep:
+
+override_dh_auto_install-arch:
 	dh_auto_install -B$(TMPBUILD_HEIMDAL) --destdir=$(TMP_HEIMDAL) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
 	dh_auto_install -B$(TMPBUILD_MIT) --destdir=$(TMP_MIT) -- sasldir=/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2
 
@@ -217,16 +216,6 @@ endif
 	# Install the sasl-sample-client and -server man pages.
 	dh_installman -psasl2-bin sasl-sample-client.8 sasl-sample-server.8
 
-	# Install saslfinger
-	install -m 644 -D debian/saslfinger/saslfinger.1 \
-		$(TMP_MIT)/usr/share/man/man1/saslfinger.1
-	install -m 755 -D debian/saslfinger/saslfinger \
-		$(TMP_MIT)/usr/bin/saslfinger
-
-	# Install gen-auth
-	install -m 755 -D debian/gen-auth/gen-auth \
-		$(TMP_MIT)/usr/bin/gen-auth
-
 override_dh_install:
 	dh_install -Nlibsasl2-modules-gssapi-heimdal --sourcedir=$(TMP_MIT)
 	dh_install -plibsasl2-modules-gssapi-heimdal --sourcedir=$(TMP_HEIMDAL)
@@ -235,7 +224,10 @@ override_dh_missing:
 	dh_missing --fail-missing
 
 override_dh_installinit:
-	dh_installinit --no-enable $(DH_PACKAGE_EXCLUDES) --name=saslauthd start 20 2 3 4 5 . stop 20 0 1 6 .
+	dh_installinit --no-enable $(DH_PACKAGE_EXCLUDES) --name=saslauthd
+
+execute_after_dh_installsystemd:
+	dh_installsystemd --no-enable $(DH_PACKAGE_EXCLUDES) --name=saslauthd
 
 override_dh_installchangelogs:
 	dh_installchangelogs -XChangeLog
@@ -243,6 +235,8 @@ override_dh_installchangelogs:
 override_dh_makeshlibs:
 	dh_makeshlibs -X/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2 $(DH_PACKAGE_EXCLUDES)
 
-override_dh_auto_test:
+override_dh_auto_test-indep:
+
+override_dh_auto_test-arch:
 	cd $(TMPBUILD_MIT)/saslauthd && $(MAKE) testsaslauthd
 	cd $(TMPBUILD_MIT)/utils && $(MAKE) testsuite

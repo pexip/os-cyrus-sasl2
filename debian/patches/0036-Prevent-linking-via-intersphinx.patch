@@ -1,0 +1,16 @@
+From: Bastian Germann <bage@debian.org>
+Date: Tue, 19 Mar 2024 23:14:29 +0000
+Subject: Prevent linking via intersphinx
+---
+diff --git a/docsrc/conf.py b/docsrc/conf.py
+index 8eb8bc9..fb1ce11 100644
+--- a/docsrc/conf.py
++++ b/docsrc/conf.py
+@@ -37,7 +37,6 @@ extensions = [
+     'sphinx.ext.ifconfig',
+     'sphinx.ext.mathjax',
+     'sphinx.ext.todo',
+-    'sphinx.ext.intersphinx',
+ ]
+ 
+ extensions.append('sphinxlocal.builders.manpage')

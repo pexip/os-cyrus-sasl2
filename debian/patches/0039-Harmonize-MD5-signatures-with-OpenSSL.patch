@@ -1,0 +1,25 @@
+From: Bastian Germann <bage@debian.org>
+Date: Wed, 7 Aug 2024 10:42:40 +0200
+Subject: Harmonize MD5 signatures with OpenSSL
+
+---
+ include/saslplug.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/saslplug.h b/include/saslplug.h
+index ab79e68..a6c9ea3 100755
+--- a/include/saslplug.h
++++ b/include/saslplug.h
+@@ -71,9 +71,9 @@ typedef struct sasl_utils {
+     sasl_mutex_free_t *mutex_free;
+ 
+     /* MD5 hash and HMAC functions */
+-    void (*MD5Init)(MD5_CTX *);
+-    void (*MD5Update)(MD5_CTX *, const unsigned char *text, unsigned int len);
+-    void (*MD5Final)(unsigned char [16], MD5_CTX *);
++    int (*MD5Init)(MD5_CTX *);
++    int (*MD5Update)(MD5_CTX *, const void *text, size_t len);
++    int (*MD5Final)(unsigned char [16], MD5_CTX *);
+     void (*hmac_md5)(const unsigned char *text, int text_len,
+ 		     const unsigned char *key, int key_len,
+ 		     unsigned char [16]);

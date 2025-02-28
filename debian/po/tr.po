@@ -1,0 +1,152 @@
+# Turkish debconf translation of cyrus-sasl2
+# This file is distributed under the same license as the cyrus-sasl2 package
+# or under BSD-2-Clause.
+# Atila KOÇ <koc@artielektronik.com.tr>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: cyrus-sasl2\n"
+"Report-Msgid-Bugs-To: pkg-cyrus-sasl2-debian-devel@lists.alioth.debian.org\n"
+"POT-Creation-Date: 2007-10-02 07:23+0200\n"
+"PO-Revision-Date: 2023-03-26 22:47+0300\n"
+"Last-Translator: Atila KOÇ <koc@artielektronik.com.tr>\n"
+"Language-Team: Debian L10n Turkish <debian-l10n-turkish@lists.debian.org>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. Type: boolean
+#. Description
+#: ../sasl2-bin.templates:2001
+msgid "Remove /etc/sasldb2?"
+msgstr "/etc/sasldb2 kaldırılsın mı?"
+
+#. Type: boolean
+#. Description
+#: ../sasl2-bin.templates:2001
+msgid ""
+"Cyrus SASL can store usernames and passwords in the /etc/sasldb2 database "
+"file."
+msgstr ""
+"Cyrus SASL kullanıcı adlarını ve parolalarını /etc/sasldb2 veritabanı "
+"dosyasında saklayabilir."
+
+#. Type: boolean
+#. Description
+#: ../sasl2-bin.templates:2001
+msgid ""
+"If important data is stored in that file, you should back it up now or "
+"choose not to remove the file."
+msgstr ""
+"Eğer o dosyada önemli veriler saklanıyorsa, onu şimdi yedeklemelisiniz veya "
+"kaldırmamayı seçmelisiniz."
+
+#. Type: string
+#. Description
+#: ../sasl2-bin.templates:3001
+msgid "Backup file name for /etc/sasldb2:"
+msgstr "/etc/sasldb2 için yedek dosyası adı:"
+
+#. Type: string
+#. Description
+#: ../sasl2-bin.templates:3001
+msgid ""
+"Cyrus SASL has stored usernames and passwords in the /etc/sasldb2 database "
+"file."
+msgstr ""
+"/etc/sasldb2 veritabanı dosyasında, Cyrus SASL tarafından saklanmış "
+"kullanıcı adları ve parolalar var."
+
+#. Type: string
+#. Description
+#: ../sasl2-bin.templates:3001
+msgid ""
+"That file has to be upgraded to a newer database format. First, a backup of "
+"the current file will be created. You can use that if you need to manually "
+"downgrade Cyrus SASL. However, automatic downgrades are not supported."
+msgstr ""
+"Bu dosya yeni bir veritabanı biçimine yükseltilmek zorunda. Önce, varolan "
+"dosyanın bir yedeği alınacak. Otomatik düşürmeler desteklenmediği halde, "
+"eğer Cyrus SASL'yi önceki sürümüne elle düşürmeniz gerekirse bu dosyayı "
+"kullanabilirsiniz."
+
+#. Type: string
+#. Description
+#: ../sasl2-bin.templates:3001
+msgid ""
+"Please specify the backup file name. You should check the available disk "
+"space in that location. If the backup file already exists, it will be "
+"overwritten. Leaving this field empty will select the default value (/var/"
+"backups/sasldb2.bak)."
+msgstr ""
+"Yedek dosya adını belirtin. Eğer orada eskisi varsa, yenisi onun üzerine "
+"yazılacaktır. Dosyanın saklanacağı yerdeki kullanılabilir disk alanını "
+"denetleyin. Bu alanı boş bırakırsanız, veritabanı yedeği /var/backups/"
+"sasldb2.bak dosyasına alınacaktır."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:4001
+msgid "Failed to back up /etc/sasldb2"
+msgstr "/etc/sasldb2 yedeklemesi başarısız oldu"
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:4001
+msgid ""
+"The /etc/sasldb2 file could not be backed up with the file name you "
+"specified."
+msgstr "/etc/sasldb2 dosyası belirttiğiniz dosya adı ile yedeklenemedi."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:4001 ../sasl2-bin.templates:5001
+msgid "This is a fatal error and will cause the package installation to fail."
+msgstr ""
+"Bu ölümcül bir hata olup, paket kurulumunun başarısız olmasına neden "
+"olacaktır."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:4001
+msgid ""
+"Please eliminate all possible reasons that might lead to this failure, and "
+"try to configure this package again."
+msgstr ""
+"Bu başarısızlığa neden olabilecek tüm olası sebepleri eleyin ve bu paketi "
+"yeniden yapılandırmayı deneyin."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:5001
+msgid "Failed to upgrade /etc/sasldb2"
+msgstr "/etc/sasldb2 yükseltmesi başarısız oldu"
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:5001
+msgid "The /etc/sasldb2 file could not be upgraded to the new database format."
+msgstr "/etc/sasldb2 dosyası yeni veritabanı biçimine yükseltilemedi."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:5001
+msgid ""
+"The configuration process will attempt to restore the backup of this file to "
+"its original location."
+msgstr ""
+"Yapılandırma süreci bu dosyanın yedeğini asıl konumuna geri yükleme "
+"girişiminde bulunacak."
+
+#. Type: error
+#. Description
+#: ../sasl2-bin.templates:5001
+msgid ""
+"Please eliminate all possible reasons that might lead to this failure, then "
+"try to configure this package again."
+msgstr ""
+"Bu başarısızlığa neden olabilecek tüm olası sebepleri eleyin ve sonra bu "
+"paketi yeniden yapılandırmayı deneyin."

@@ -1,0 +1,29 @@
+From: Bastian Germann <bage@debian.org>
+Date: Thu, 21 Mar 2024 00:20:50 +0100
+Subject: Prevent six import
+
+---
+ docsrc/exts/sphinxlocal/builders/manpage.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/docsrc/exts/sphinxlocal/builders/manpage.py b/docsrc/exts/sphinxlocal/builders/manpage.py
+index c558f73..c4ed30f 100644
+--- a/docsrc/exts/sphinxlocal/builders/manpage.py
++++ b/docsrc/exts/sphinxlocal/builders/manpage.py
+@@ -14,7 +14,6 @@
+ 
+ from os import path
+ 
+-from six import string_types
+ from docutils.io import FileOutput
+ from docutils.frontend import OptionParser
+ 
+@@ -57,7 +56,7 @@ class CyrusManualPageBuilder(ManualPageBuilder):
+ 
+         for info in self.config.man_pages:
+             docname, name, description, authors, section = info
+-            if isinstance(authors, string_types):
++            if isinstance(authors, str):
+                 if authors:
+                     authors = [authors]
+                 else:

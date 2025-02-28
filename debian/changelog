@@ -1,3 +1,101 @@
+cyrus-sasl2 (2.1.28+dfsg1-9) unstable; urgency=medium
+
+  * Team upload
+  * digestmd5: Free RC4 cipher (Closes: #1091694)
+  * Apply arch/indep split (Closes: #1065595)
+  * d/rules: Drop unnecessary variables
+  * Introduce nodoc profile
+  * Prevent installing man1
+
+  [ Guillem Jover ]
+  * Fix and simplify sample server/client build (Closes: #1078998)
+
+ -- Bastian Germann <bage@debian.org>  Fri, 28 Feb 2025 22:58:50 +0100
+
+cyrus-sasl2 (2.1.28+dfsg1-8) unstable; urgency=medium
+
+  * Team upload
+
+  [ Sergio Durigan Junior ]
+  * d/sasl2-bin.saslauthd.service: Add Group=sasl directive (LP: #2078851)
+
+ -- Bastian Germann <bage@debian.org>  Wed, 04 Sep 2024 23:46:34 +0200
+
+cyrus-sasl2 (2.1.28+dfsg1-7) unstable; urgency=medium
+
+  * Team upload
+  * Harmonize MD5 signatures with OpenSSL (Closes: #1074899)
+  * Harmonize getsubopt casts with glibc
+
+ -- Bastian Germann <bage@debian.org>  Wed, 07 Aug 2024 11:50:42 +0200
+
+cyrus-sasl2 (2.1.28+dfsg1-6) unstable; urgency=medium
+
+  * Team upload
+  * Patch: Prevent six import (Closes: #1067425)
+
+ -- Bastian Germann <bage@debian.org>  Thu, 21 Mar 2024 19:19:46 +0000
+
+cyrus-sasl2 (2.1.28+dfsg1-5) unstable; urgency=medium
+
+  * Team upload
+  * Fix implicit function declaration (Closes: #1066214)
+  * Prevent linking via intersphinx (Closes: #1065436)
+  * Extend the time_t format specifiers to long long (Closes: #1066811)
+
+ -- Bastian Germann <bage@debian.org>  Wed, 20 Mar 2024 19:03:11 +0000
+
+cyrus-sasl2 (2.1.28+dfsg1-4) unstable; urgency=medium
+
+  * Team upload
+  * Clean docsrc/exts/themes (Closes: #1045111)
+  * Drop gen-auth and saslfinger
+  * Remove Uploaders who contributed more than a decade ago
+  * Remove myself from Uploaders
+
+ -- Bastian Germann <bage@debian.org>  Sat, 11 Nov 2023 22:17:13 +0100
+
+cyrus-sasl2 (2.1.28+dfsg1-3) unstable; urgency=medium
+
+  * Let libsasl2-dev depend on libssl-dev (Closes: #1042937)
+
+ -- Bastian Germann <bage@debian.org>  Fri, 04 Aug 2023 00:35:18 +0200
+
+cyrus-sasl2 (2.1.28+dfsg1-2) unstable; urgency=medium
+
+  * Eliminate RSA-MD from binaries (Closes: #748061)
+
+ -- Bastian Germann <bage@debian.org>  Tue, 01 Aug 2023 16:16:30 +0200
+
+cyrus-sasl2 (2.1.28+dfsg1-1) unstable; urgency=medium
+
+  * Exclude crypto-compat
+  * New upstream version 2.1.28+dfsg1
+  * Get rid of BSD-4-clause-KTH
+  * Use SPDX name for the primary license
+  * Add Turkish translation (Closes: #1036910)
+
+  [ Andreas Hasenack ]
+  * d/t/saslauthd: fix test flakiness (Closes: #1036893)
+
+ -- Bastian Germann <bage@debian.org>  Mon, 05 Jun 2023 23:24:14 +0200
+
+cyrus-sasl2 (2.1.28+dfsg-11) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Apply multi-arch hints. + cyrus-sasl2-doc: Add Multi-Arch: foreign.
+
+  [ Bastian Germann ]
+  * Add Romanian translation (Closes: #1031499)
+  * Fix lintian depends-on-obsolete-package (lsb-base)
+  * Add saslauthd.service (Closes: #981438)
+  * Remove dh_installinit params
+  * Install saslauthd.service similar to saslauthd.init
+  * Drop old NEWS
+  * Fix systemd-service-file-missing-documentation-key
+
+ -- Bastian Germann <bage@debian.org>  Wed, 01 Mar 2023 00:52:04 +0100
+
 cyrus-sasl2 (2.1.28+dfsg-10) unstable; urgency=medium
 
   [ Helmut Grohne ]

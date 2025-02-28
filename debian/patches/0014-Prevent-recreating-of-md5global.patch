@@ -1,0 +1,31 @@
+Author: Bastian Germann <bage@debian.org>
+Date: Thu Apr 13 18:24:27 2023 +0200
+Description: Prevent recreating of md5global
+---
+diff --git a/include/Makefile.am b/include/Makefile.am
+index c942efa..223556d 100644
+--- a/include/Makefile.am
++++ b/include/Makefile.am
+@@ -47,22 +47,13 @@ noinst_HEADERS = gai.h exits.h
+ saslincludedir = $(includedir)/sasl
+ saslinclude_HEADERS = hmac-md5.h md5global.h sasl.h saslplug.h saslutil.h prop.h
+ 
+-noinst_PROGRAMS = makemd5
+-
+-makemd5_SOURCES = makemd5.c
+-
+ makemd5$(BUILD_EXEEXT) $(makemd5_OBJECTS): CC=$(CC_FOR_BUILD)
+ makemd5$(BUILD_EXEEXT) $(makemd5_OBJECTS): CFLAGS=$(CFLAGS_FOR_BUILD)
+ makemd5$(BUILD_EXEEXT): LDFLAGS=$(LDFLAGS_FOR_BUILD)
+ 
+-md5global.h: makemd5$(BUILD_EXEEXT) Makefile
+-	-rm -f $@
+-	./$< $@
+-
+ BUILT_SOURCES = md5global.h
+ 
+ EXTRA_DIST = NTMakefile
+-DISTCLEANFILES = md5global.h
+ 
+ if MACOSX
+ framedir = /Library/Frameworks/SASL2.framework

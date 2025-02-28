@@ -1,1 +1,4 @@
+common/crypto-compat.c
+common/crypto-compat.h
+docsrc/exts/themes/
 saslauthd/saslauthd.8

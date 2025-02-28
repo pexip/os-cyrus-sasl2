@@ -1,6 +1,6 @@
 #
 # Settings for saslauthd daemon
-# Please read /usr/share/doc/sasl2-bin/README.Debian for details.
+# Please read /usr/share/doc/sasl2-bin/README.Debian.gz for details.
 #
 
 # Description of this saslauthd instance. Recommended.
@@ -44,7 +44,6 @@ THREADS=5
 # a daemon. This will PREVENT YOUR SYSTEM FROM BOOTING PROPERLY. If you wish
 # to run saslauthd in debug mode, please run it by hand to be safe.
 #
-# See /usr/share/doc/sasl2-bin/README.Debian for Debian-specific information.
 # See the saslauthd man page and the output of 'saslauthd -h' for general
 # information about these options.
 #

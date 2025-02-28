@@ -11,12 +11,28 @@ ldap_admin_dn="cn=admin,${ldap_suffix}"
 MECHS="sasldb pam ldap"
 
 cleanup() {
+    if [ $? -ne 0 ]; then
+        set +e
+        echo "## Something failed, gathering logs"
+        echo
+        echo "## saslauthd"
+        journalctl -u saslauthd.service
+        echo
+        echo "## syslog"
+        tail -n 500 /var/log/syslog
+        echo
+        echo "## sasldb2 users"
+        sasldblistusers2
+        echo
+        echo "## slapd"
+        journalctl -u slapd
+    fi
+    set +e
     if [ -n "${sasluser}" ]; then
         saslpasswd2 -d "${sasluser}" > /dev/null 2>&1 || :
         userdel -r "${sasluser}" > /dev/null 2>&1 || :
     fi
     systemctl stop saslauthd || :
-    sed -r -i '/^START=/d' /etc/default/saslauthd || :
     rm -f /etc/saslauthd.conf || :
 }
 
@@ -33,11 +49,6 @@ trap cleanup EXIT
 
 _configure_saslauthd() {
     sed -r -i "s,^MECHANISMS=.*,MECHANISMS=\"${1}\"," /etc/default/saslauthd
-    if ! grep -q ^START /etc/default/saslauthd; then
-        echo "START=\"yes\"" >> /etc/default/saslauthd
-    else
-        sed -r -i 's,^START=.*,START="yes",' /etc/default/saslauthd
-    fi
     if [ "${1}" = "ldap" ]; then
         cat > /etc/saslauthd.conf <<EOF
 ldap_servers: ldap://127.0.0.1
@@ -91,6 +102,13 @@ EOF
     rm -rf /var/backups/*slapd* /var/backups/unknown*ldapdb
     dpkg-reconfigure -fnoninteractive -pcritical slapd 2>&1
     systemctl restart slapd # http://bugs.debian.org/1010678
+    ldapmodify -Y EXTERNAL -H ldapi:/// 2>&1 <<EOF
+dn: cn=config
+changetype: modify
+replace: olcLogLevel
+olcLogLevel: stats
+
+EOF
     _populate_ldap_tree
 }
 
@@ -112,6 +130,8 @@ _setup_saslauthd_ldap() {
 }
 
 setup_saslauthd() {
+    tries=5
+
     if echo "${MECHS}" | grep -qw "${1}"; then
         "_setup_saslauthd_${1}" "${1}"
     else
@@ -119,7 +139,34 @@ setup_saslauthd() {
         exit 1
     fi
     systemctl restart saslauthd
+    echo -n "Waiting for saslauthd restart "
+    while [ ${tries} -ne 0 ]; do
+        echo -n "."
+        if [ -S /var/run/saslauthd/mux ]; then
+            echo
+            break
+        fi
+        tries=$((tries-1))
+        sleep 1s
+    done
+    if [ ${tries} -eq 0 ]; then
+        echo "ERROR: saslauthd failed to start"
+        return 1
+    fi
 }
+
+override_systemd_throttling() {
+    local svc="${1}"
+
+    mkdir -p "/run/systemd/system/${svc}.service.d"
+    cat > "/run/systemd/system/${svc}.service.d/override.conf" <<EOF
+[Unit]
+StartLimitIntervalSec=0
+EOF
+    systemctl daemon-reload
+}
+
+override_systemd_throttling saslauthd
 
 for mech in ${MECHS}; do
     echo "Setting up saslauthd with mecanism ${mech}"

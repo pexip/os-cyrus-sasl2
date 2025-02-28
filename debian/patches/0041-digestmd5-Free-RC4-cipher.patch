@@ -1,0 +1,22 @@
+From: Bastian Germann <bage@debian.org>
+Date: Thu, 9 Jan 2025 12:40:29 +0100
+Bug-Debian: https://bugs.debian.org/1091694
+Forwarded: not-needed
+Subject: digestmd5: Free RC4 cipher
+
+---
+ plugins/digestmd5.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plugins/digestmd5.c b/plugins/digestmd5.c
+index 0cb399b..2e07196 100644
+--- a/plugins/digestmd5.c
++++ b/plugins/digestmd5.c
+@@ -1243,6 +1243,7 @@ static int init_rc4(context_t *text,
+     rc = SASL_OK;
+ 
+ done:
++    EVP_CIPHER_free(cipher);
+     if (rc != SASL_OK) {
+         free_rc4(text);
+     }

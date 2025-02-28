@@ -1,0 +1,27 @@
+Origin: backport, https://github.com/cyrusimap/cyrus-sasl/pull/780
+From: Bastian Germann <bage@debian.org>
+Date: Sun, 23 Jul 2023 20:39:59 +0200
+Subject: utils: Link libcrypto
+
+With sasl_checkapop enabled, testsuite uses libcrypto functions.
+
+Signed-off-by: Bastian Germann <bage@debian.org>
+---
+ utils/Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/utils/Makefile.am b/utils/Makefile.am
+index 193929d6..b674bbd0 100644
+--- a/utils/Makefile.am
++++ b/utils/Makefile.am
+@@ -42,8 +42,8 @@
+ #
+ ################################################################
+ 
+-all_sasl_libs = ../lib/libsasl2.la $(SASL_DB_LIB) $(LIB_SOCKET)
+-all_sasl_static_libs = ../lib/.libs/libsasl2.a $(SASL_DB_LIB) $(LIB_SOCKET) $(GSSAPIBASE_LIBS) $(GSSAPI_LIBS) $(SASL_KRB_LIB) $(LIB_DES) $(PLAIN_LIBS) $(SRP_LIBS) $(LIB_MYSQL) $(LIB_PGSQL) $(LIB_SQLITE)
++all_sasl_libs = ../lib/libsasl2.la $(SASL_DB_LIB) $(LIB_SOCKET) -lcrypto
++all_sasl_static_libs = ../lib/.libs/libsasl2.a $(SASL_DB_LIB) $(LIB_SOCKET) $(GSSAPIBASE_LIBS) $(GSSAPI_LIBS) $(SASL_KRB_LIB) $(LIB_DES) $(PLAIN_LIBS) $(SRP_LIBS) $(LIB_MYSQL) $(LIB_PGSQL) $(LIB_SQLITE) -lcrypto
+ 
+ sbin_PROGRAMS = @SASL_DB_UTILS@ @SMTPTEST_PROGRAM@ pluginviewer
+ EXTRA_PROGRAMS = saslpasswd2 sasldblistusers2 testsuite testsuitestatic smtptest pluginviewer

@@ -8,10 +8,8 @@ INCDIR1=$(T)/../include
 INCDIR2=$(T)/include
 LIBDIR=$(T)/lib/.libs
 
-all: sample-server sample-client
+CPPFLAGS += -DPLUGINDIR=\"/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2\"
+CPPFLAGS += -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR)
+LDLIBS = -lsasl2
 
-sample-server: sample-server.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -DPLUGINDIR=\"/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2\" $(LDFLAGS) -g -o sample-server sample-server.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2
-
-sample-client: sample-client.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -DPLUGINDIR=\"/usr/lib/$(DEB_HOST_MULTIARCH)/sasl2\" $(LDFLAGS) -g -o sample-client sample-client.c -I. -I$(T) -I$(INCDIR1) -I$(INCDIR2) -L$(LIBDIR) -lsasl2
+all: sample/sample-server sample/sample-client
