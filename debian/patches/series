@@ -25,3 +25,4 @@
 openssl3-support.patch
 openssl3-internal-md5.patch
 fix_kerberos_m4.patch
+0033-Check-for-gssapi_krb5.h-before-testing-a-resulting-value.patch
