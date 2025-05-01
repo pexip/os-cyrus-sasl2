@@ -26,6 +26,7 @@ Build-Depends: chrpath,
                libssl-dev (>= 3),
                po-debconf,
                python3-sphinx-rtd-theme:native,
+               python3-six,
 Build-Conflicts: heimdal-dev
 Vcs-Browser: https://salsa.debian.org/debian/cyrus-sasl2
 Vcs-Git: https://salsa.debian.org/debian/cyrus-sasl2.git
