@@ -1,3 +1,9 @@
+cyrus-sasl2 (2.1.28+dfsg1+really+dfsg-1+pexip25u1) pexip-trixie; urgency=medium
+
+  * Increment version to be greater than trixie version.
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 01 May 2025 11:49:30 +0100
+
 cyrus-sasl2 (2.1.28+dfsg-10+pexip25u1) pexip-trixie; urgency=medium
 
   * Revert trixie to bookworm version to deal with MD5 issues.
