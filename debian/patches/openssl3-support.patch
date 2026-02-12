@@ -1,3 +1,5 @@
+Replace use of APIs which were deprecated in OpenSSL 3
+
 --- a/plugins/digestmd5.c
 +++ b/plugins/digestmd5.c
 @@ -63,6 +63,7 @@
