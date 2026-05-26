@@ -1,3 +1,10 @@
+cyrus-sasl2 (2.1.28+dfsg1+really+dfsg-1+pexip25u4) pexip-trixie; urgency=medium
+
+  * Move libsasl2-modules-db back to main because the library depends on it
+    (so why is it even in a different package then?).
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Tue, 26 May 2026 09:46:52 +0100
+
 cyrus-sasl2 (2.1.28+dfsg1+really+dfsg-1+pexip25u3) pexip-trixie; urgency=medium
 
   * Rebuild to move sasl module packages back to extra.
